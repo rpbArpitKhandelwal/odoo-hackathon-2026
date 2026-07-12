@@ -83,3 +83,83 @@ export default function Layout() {
       navigate(`/vehicles?q=${encodeURIComponent(search.trim())}`);
       setSearch('');
     }
+  }
+
+  const cta = CTA[user.role] || CTA.DRIVER;
+
+  return (
+    <div className="app-shell">
+      <aside className="sidebar">
+        <div className="side-brand">
+          <div className="brand-ico"><IconTruck size={22} /></div>
+          <div>
+            <div className="brand-name">TransitOps</div>
+            <div className="brand-tag">Fleet Operations</div>
+          </div>
+        </div>
+
+        <button className="side-cta" onClick={() => navigate(cta.to)}>
+          <IconPlus size={15} /> {cta.label}
+        </button>
+
+        <nav>
+          {NAV.filter((item) => !item.hideFor?.includes(user.role)).map((item) => (
+            <NavLink key={item.to} to={item.to} end={item.to === '/'} className="nav-link">
+              {item.icon} {item.label}
+            </NavLink>
+          ))}
+        </nav>
+
+        <div className="side-foot">
+          <button className="nav-link" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
+            {theme === 'light' ? <IconMoon /> : <IconSun />} {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
+          </button>
+          <button className="nav-link" onClick={logout}>
+            <IconLogout /> Log Out
+          </button>
+        </div>
+      </aside>
+
+      <div className="main-col">
+        <header className="topbar">
+          <span className="topbar-title">Operations Command</span>
+          <div className="topbar-search">
+            <IconSearch size={16} />
+            <input
+              placeholder="Search vehicles by name or reg no…  ⏎"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              onKeyDown={submitSearch}
+            />
+          </div>
+
+          <div className="topbar-right" ref={topRightRef}>
+            {/* ---- Notifications ---- */}
+            <button className="icon-btn" title="Notifications" onClick={() => setMenu(menu === 'bell' ? null : 'bell')}>
+              <IconBell />
+              {alerts.length > 0 && <span className="bell-count">{alerts.length > 9 ? '9+' : alerts.length}</span>}
+            </button>
+            {menu === 'bell' && (
+              <div className="dropdown dropdown-bell">
+                <div className="dropdown-head">
+                  <strong>Notifications</strong>
+                  {alerts.length > 0 && <span className="chip chip-red">{alerts.length} active</span>}
+                </div>
+                <div className="dropdown-scroll">
+                  {alerts.length === 0 && <p className="muted small" style={{ padding: '14px 16px' }}>All clear — no alerts right now. ✓</p>}
+                  {alerts.slice(0, 8).map((a, i) => (
+                    <div key={i} className="dropdown-alert">
+                      <div className={`alert-ico tone-${a.tone}`}>{a.icon}</div>
+                      <div>
+                        <div className="alert-title">{a.title}</div>
+                        <div className="alert-desc">{a.desc}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <button className="dropdown-foot" onClick={() => { setMenu(null); navigate('/'); }}>
+                  View all on dashboard →
+                </button>
+              </div>
+            )}
+
