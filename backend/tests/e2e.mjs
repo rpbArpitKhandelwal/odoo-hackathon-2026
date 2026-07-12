@@ -106,3 +106,15 @@ r = await req('POST', `/trips/${tripId}/complete`, { endOdometerKm: startOdo + 4
 check('Complete works', r.status === 200 && r.data.status === 'COMPLETED');
 check('  → vehicle back to AVAILABLE, odometer updated', r.data.vehicle.status === 'AVAILABLE' && Number(r.data.vehicle.odometerKm) === startOdo + 420);
 check('  → driver back to AVAILABLE', r.data.driver.status === 'AVAILABLE');
+
+// ---------- 6. Maintenance flow (as Fleet Manager) ----------
+await login('manager@transitops.com');
+r = await req('POST', '/maintenance', { vehicleId: van.id, title: 'E2E test service', cost: 1000 });
+check('Maintenance opened, vehicle IN_SHOP', r.status === 201 && r.data.vehicle.status === 'IN_SHOP');
+const maintId = r.data.id;
+let avail = (await req('GET', '/vehicles?available=true')).data;
+check('  → in-shop vehicle hidden from dispatch pool', !avail.some((v) => v.id === van.id));
+r = await req('POST', `/maintenance/${maintId}/close`, { cost: 1200 });
+check('Maintenance closed, vehicle AVAILABLE again', r.status === 200);
+avail = (await req('GET', '/vehicles?available=true')).data;
+check('  → vehicle back in dispatch pool', avail.some((v) => v.id === van.id));
