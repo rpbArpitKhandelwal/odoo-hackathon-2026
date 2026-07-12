@@ -40,3 +40,7 @@ const alex = drivers.find((d) => d.name === 'Alex Kumar');
 const expired = drivers.find((d) => d.name === 'Ravi Expired');
 const suspended = drivers.find((d) => d.name === 'Sunil Suspended');
 const retired = vehicles.find((v) => v.status === 'RETIRED');
+
+// ---------- 3. Vehicle rules (as Fleet Manager) ----------
+r = await req('POST', '/vehicles', { regNo: 'GJ01AB1234', name: 'Dup', type: 'Van', maxLoadKg: 100, acquisitionCost: 1 });
+check('Duplicate reg no rejected (409)', r.status === 409, r.data.error);
