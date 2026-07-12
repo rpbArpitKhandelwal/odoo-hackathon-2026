@@ -48,3 +48,7 @@ async function buildVehicleReport() {
       roi: acquisition > 0 ? round2((revenue - operationalCost) / acquisition) : null,
     };
   });
+}
+
+const round1 = (n) => Math.round(n * 10) / 10;
+const round2 = (n) => Math.round(n * 100) / 100;
