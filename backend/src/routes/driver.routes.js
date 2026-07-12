@@ -45,3 +45,23 @@ router.get('/:id', async (req, res, next) => {
     next(err);
   }
 });
+
+router.post('/', authorize(...CAN_WRITE), async (req, res, next) => {
+  try {
+    validateDriver(req.body);
+    const { name, licenseNo, licenseCategory, licenseExpiry, contact, safetyScore } = req.body;
+    const driver = await prisma.driver.create({
+      data: {
+        name: name.trim(),
+        licenseNo: licenseNo.trim().toUpperCase(),
+        licenseCategory: licenseCategory.trim(),
+        licenseExpiry: new Date(licenseExpiry),
+        contact,
+        safetyScore: safetyScore ?? 100,
+      },
+    });
+    res.status(201).json(driver);
+  } catch (err) {
+    next(err);
+  }
+});
