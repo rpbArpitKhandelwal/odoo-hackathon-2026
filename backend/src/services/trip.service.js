@@ -16,3 +16,12 @@ async function assertAssignable(tx, { vehicleId, driverId, cargoWeightKg }) {
   if (vehicle.status === 'IN_SHOP') throw new ApiError(400, `${vehicle.name} is in the shop for maintenance`);
   // Rule: a vehicle already On Trip cannot take another trip
   if (vehicle.status === 'ON_TRIP') throw new ApiError(409, `${vehicle.name} is already on a trip`);
+
+  const driver = await tx.driver.findUnique({ where: { id: Number(driverId) } });
+  if (!driver) throw new ApiError(404, 'Driver not found');
+
+  // Rule: suspended drivers cannot be assigned
+  if (driver.status === 'SUSPENDED') throw new ApiError(400, `${driver.name} is suspended and cannot drive`);
+  if (driver.status === 'OFF_DUTY') throw new ApiError(400, `${driver.name} is off duty`);
+  // Rule: a driver already On Trip cannot take another trip
+  if (driver.status === 'ON_TRIP') throw new ApiError(409, `${driver.name} is already on a trip`);
