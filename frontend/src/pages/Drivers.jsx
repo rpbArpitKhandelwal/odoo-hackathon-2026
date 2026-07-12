@@ -49,4 +49,56 @@ export default function Drivers() {
         toast.success(`Driver ${form.name} registered.`);
       }
       setForm(null);
-      load();
+      load();
+    } catch (err) {
+      toast.error(err.message);
+    }
+  }
+
+  async function remove(d) {
+    if (!confirm(`Delete driver ${d.name}?`)) return;
+    try {
+      await api.del(`/drivers/${d.id}`);
+      toast.success(`Driver ${d.name} deleted.`);
+      load();
+    } catch (err) {
+      toast.error(err.message); // e.g. "Driver has trip history — suspend instead"
+    }
+  }
+
+  const set = (key) => (e) => setForm({ ...form, [key]: e.target.value });
+  const expiredCount = drivers.filter((d) => isExpired(d.licenseExpiry)).length;
+  const suspendedCount = drivers.filter((d) => d.status === 'SUSPENDED').length;
+
+  return (
+    <div>
+      <div className="page-head">
+        <div>
+          <h1>Driver Management</h1>
+          <p className="page-sub">Monitor roster status, credentials, and assignments.</p>
+        </div>
+        {canWrite && (
+          <button className="btn btn-dark" onClick={() => setForm({ ...EMPTY })}>
+            <IconPlus size={15} /> Add Driver
+          </button>
+        )}
+      </div>
+
+      <div className="kpi-grid">
+        <KpiCard icon={<IconUser />} tone="blue" label="Total Drivers" value={drivers.length} />
+        <KpiCard icon={<IconRoute />} tone="green" label="On Trip" value={drivers.filter((d) => d.status === 'ON_TRIP').length} sub="Active deployments" />
+        <KpiCard icon={<IconCalendar />} tone="green" label="Available" value={drivers.filter((d) => d.status === 'AVAILABLE' && !isExpired(d.licenseExpiry)).length} sub="Ready for dispatch" />
+        <KpiCard
+          icon={<IconAlert />} tone="red" label="Alerts" value={expiredCount + suspendedCount}
+          sub={`Expired licenses (${expiredCount}), Suspended (${suspendedCount})`}
+        />
+      </div>
+
+      <div className="panel">
+        <div className="panel-head">
+          <h2>Driver Roster</h2>
+          <div className="filters">
+            <div className="topbar-search" style={{ maxWidth: 240 }}>
+              <IconSearch size={15} />
+              <input placeholder="Search drivers…" value={search} onChange={(e) => setSearch(e.target.value)} />
+            </div>
