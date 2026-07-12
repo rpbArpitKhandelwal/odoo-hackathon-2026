@@ -114,3 +114,16 @@ model Trip {
   completedAt       DateTime?  @map("completed_at")
   cancelledAt       DateTime?  @map("cancelled_at")
   createdAt         DateTime   @default(now()) @map("created_at")
+
+  vehicle     Vehicle   @relation(fields: [vehicleId], references: [id])
+  vehicleId   Int       @map("vehicle_id")
+  driver      Driver    @relation(fields: [driverId], references: [id])
+  driverId    Int       @map("driver_id")
+  createdBy   User      @relation(fields: [createdById], references: [id])
+  createdById Int       @map("created_by")
+  fuelLogs    FuelLog[]
+  expenses    Expense[]
+
+  @@index([status])
+  @@map("trips")
+}
