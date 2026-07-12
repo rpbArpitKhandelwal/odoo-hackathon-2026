@@ -81,3 +81,10 @@ async function dispatchTrip(tripId) {
     });
   });
 }
+
+// DISPATCHED -> COMPLETED: record odometer + fuel, release vehicle & driver
+async function completeTrip(tripId, { endOdometerKm, fuelLiters, fuelCost, revenue }) {
+  return prisma.$transaction(async (tx) => {
+    const trip = await tx.trip.findUnique({ where: { id: tripId } });
+    if (!trip) throw new ApiError(404, 'Trip not found');
+    if (trip.status !== 'DISPATCHED') throw new ApiError(400, `Only Dispatched trips can be completed (current: ${trip.status})`);
