@@ -45,3 +45,13 @@ router.post('/:id/complete', authorize(...CAN_MANAGE), async (req, res, next) =>
     next(err);
   }
 });
+
+router.post('/:id/cancel', authorize(...CAN_MANAGE), async (req, res, next) => {
+  try {
+    res.json(await tripService.cancelTrip(Number(req.params.id)));
+  } catch (err) {
+    next(err);
+  }
+});
+
+module.exports = router;
