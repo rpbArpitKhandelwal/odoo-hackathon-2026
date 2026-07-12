@@ -128,3 +128,6 @@ Enforced twice: `authorize(...roles)` middleware on the API (403 with a clear me
 2. Log in as Safety Officer → register driver **Alex** with valid license.
 3. As Driver role → create trip, cargo **550 kg** → show the validation error (graceful handling!). Change to **450 kg** → draft saves.
 4. Dispatch → show vehicle AND driver flip to On Trip on dashboard; try to assign Van-05 to another trip → blocked.
+5. Complete trip with final odometer + fuel → both back to Available, fuel log recorded.
+6. Open maintenance "Oil Change" on Van-05 → status In Shop, gone from dispatch dropdown. Close it → Available again.
+7. Try dispatching with driver whose license is expired (seeded: "Ravi Expired") → blocked with a clear message.
