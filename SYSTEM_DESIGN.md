@@ -109,3 +109,8 @@ Enforced twice: `authorize(...roles)` middleware on the API (403 with a clear me
 - **Fuel Efficiency** = total distance (odometer deltas of completed trips) ÷ total liters
 - **Operational Cost / vehicle** = Σ fuel cost + Σ maintenance cost (+ Σ other expenses shown separately)
 - **Vehicle ROI** = (Σ trip revenue − (maintenance + fuel)) ÷ acquisition cost
+
+## 7. 8-Hour Plan — 4 parallel tracks
+
+| Hour | M1 · Backend core | M2 · Backend rules/reports | M3 · Frontend UI | M4 · Frontend data/integration |
+|---|---|---|---|---|
