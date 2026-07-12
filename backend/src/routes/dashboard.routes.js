@@ -29,3 +29,26 @@ router.get('/', async (req, res, next) => {
       prisma.driver.count({ where: { status: { in: ['AVAILABLE', 'ON_TRIP'] } } }),
       prisma.driver.count(),
     ]);
+
+    // Fleet Utilization % = vehicles on trip / active fleet (total minus retired)
+    const activeFleet = totalVehicles - retiredVehicles;
+    const fleetUtilization = activeFleet > 0 ? Math.round((onTripVehicles / activeFleet) * 1000) / 10 : 0;
+
+    res.json({
+      totalVehicles,
+      availableVehicles,
+      activeVehicles: onTripVehicles,
+      inMaintenance: inShopVehicles,
+      retiredVehicles,
+      activeTrips,
+      pendingTrips,
+      driversOnDuty,
+      totalDrivers,
+      fleetUtilization,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+module.exports = router;
