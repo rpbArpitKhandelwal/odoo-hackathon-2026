@@ -1,0 +1,54 @@
+/* ============================================================
+   TransitOps design system — "Operations Command" style
+   Sans for headings/body, mono accents for labels/nav/tables.
+   ============================================================ */
+:root {
+  --bg: #f5f7fb;
+  --surface: #ffffff;
+  --border: #e4e9f2;
+  --text: #101828;
+  --muted: #667085;
+  --accent: #2563eb;
+  --accent-soft: #eff4ff;
+  --sidebar: #0b1120;
+  --sidebar-2: #111a2e;
+  --sidebar-text: #94a3b8;
+  --green: #16a34a;
+  --green-soft: #e7f8ee;
+  --amber: #d97706;
+  --amber-soft: #fdf3e3;
+  --red: #dc2626;
+  --red-soft: #fdeaea;
+  --blue: #2563eb;
+  --blue-soft: #e8f0fe;
+  --purple: #7c3aed;
+  --purple-soft: #f1eafe;
+  --gray-soft: #eef1f6;
+  --dark-btn: #0b1120;
+  --radius: 12px;
+  --shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
+  --font-sans: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Cascadia Mono', 'JetBrains Mono', Consolas, 'Courier New', monospace;
+}
+
+[data-theme='dark'] {
+  --bg: #0d1322;
+  --surface: #151d31;
+  --border: #263045;
+  --text: #e6eaf3;
+  --muted: #8d99b2;
+  --accent: #4f7cff;
+  --accent-soft: #1b2647;
+  --sidebar: #090e1a;
+  --sidebar-2: #101828;
+  --green-soft: #10301f;
+  --amber-soft: #33260e;
+  --red-soft: #371518;
+  --blue-soft: #16233f;
+  --purple-soft: #251a3d;
+  --gray-soft: #1d2639;
+  --dark-btn: #2b3b5e;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+}
+
+* { box-sizing: border-box; margin: 0; }
