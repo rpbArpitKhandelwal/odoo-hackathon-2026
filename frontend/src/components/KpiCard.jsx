@@ -12,4 +12,8 @@ export default function KpiCard({ icon, tone = 'blue', label, value, sub, trend,
         )}
       </div>
       <div className="kpi-label">{label}</div>
-      <div className="kpi-value">{value}</div>
+      <div className="kpi-value">{value}</div>
+      {sub && <div className="kpi-sub">{sub}</div>}
+    </div>
+  );
+}
