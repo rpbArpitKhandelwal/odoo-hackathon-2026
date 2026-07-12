@@ -41,3 +41,18 @@ async function main() {
   for (const v of vehicles) {
     vehicleRows[v.regNo] = await prisma.vehicle.upsert({ where: { regNo: v.regNo }, update: {}, create: v });
   }
+
+  // --- Drivers (valid, expired-license, suspended, off-duty) ---
+  const inOneYear = new Date(Date.now() + 365 * 24 * 3600 * 1000);
+  const lastMonth = new Date(Date.now() - 30 * 24 * 3600 * 1000);
+  const drivers = [
+    { name: 'Alex Kumar', licenseNo: 'DL-2020-001', licenseCategory: 'LMV', licenseExpiry: inOneYear, contact: '9876500001', safetyScore: 92, status: 'AVAILABLE' },
+    { name: 'Priya Sharma', licenseNo: 'DL-2019-002', licenseCategory: 'HMV', licenseExpiry: inOneYear, contact: '9876500002', safetyScore: 88, status: 'AVAILABLE' },
+    { name: 'Ravi Expired', licenseNo: 'DL-2015-003', licenseCategory: 'LMV', licenseExpiry: lastMonth, contact: '9876500003', safetyScore: 75, status: 'AVAILABLE' }, // license expired -> must be blocked
+    { name: 'Sunil Suspended', licenseNo: 'DL-2018-004', licenseCategory: 'HMV', licenseExpiry: inOneYear, contact: '9876500004', safetyScore: 40, status: 'SUSPENDED' }, // suspended -> must be blocked
+    { name: 'Meena Rest', licenseNo: 'DL-2021-005', licenseCategory: 'LMV', licenseExpiry: inOneYear, contact: '9876500005', safetyScore: 95, status: 'OFF_DUTY' },
+  ];
+  const driverRows = {};
+  for (const d of drivers) {
+    driverRows[d.licenseNo] = await prisma.driver.upsert({ where: { licenseNo: d.licenseNo }, update: {}, create: d });
+  }
