@@ -20,3 +20,12 @@ router.get('/', async (req, res, next) => {
     next(err);
   }
 });
+
+router.post('/', authorize(...CAN_MANAGE), async (req, res, next) => {
+  try {
+    const trip = await tripService.createTrip(req.body, req.user.id);
+    res.status(201).json(trip);
+  } catch (err) {
+    next(err);
+  }
+});
