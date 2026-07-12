@@ -28,3 +28,16 @@ async function main() {
       create: { name: u.name, email: u.email, passwordHash, roleId: roles[u.role].id },
     });
   }
+
+  // --- Vehicles (cover every status) ---
+  const vehicles = [
+    { regNo: 'GJ01AB1234', name: 'Tata Ace', type: 'Mini Truck', maxLoadKg: 750, odometerKm: 45210, acquisitionCost: 550000, region: 'West', status: 'AVAILABLE' },
+    { regNo: 'GJ01CD5678', name: 'Eicher Pro 2049', type: 'Truck', maxLoadKg: 5000, odometerKm: 120400, acquisitionCost: 1850000, region: 'West', status: 'AVAILABLE' },
+    { regNo: 'MH12EF9012', name: 'Mahindra Bolero Pickup', type: 'Van', maxLoadKg: 1250, odometerKm: 78950, acquisitionCost: 900000, region: 'Central', status: 'AVAILABLE' },
+    { regNo: 'DL05GH3456', name: 'Ashok Leyland Dost', type: 'Van', maxLoadKg: 1500, odometerKm: 30200, acquisitionCost: 820000, region: 'North', status: 'IN_SHOP' },
+    { regNo: 'KA03IJ7890', name: 'Tata 407 (Old)', type: 'Truck', maxLoadKg: 2200, odometerKm: 310000, acquisitionCost: 1200000, region: 'South', status: 'RETIRED' },
+  ];
+  const vehicleRows = {};
+  for (const v of vehicles) {
+    vehicleRows[v.regNo] = await prisma.vehicle.upsert({ where: { regNo: v.regNo }, update: {}, create: v });
+  }
