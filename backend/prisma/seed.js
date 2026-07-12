@@ -80,3 +80,10 @@ async function main() {
     await prisma.expense.create({
       data: { vehicleId: trip.vehicleId, tripId: trip.id, category: 'TOLL', amount: 890, note: 'NH48 tolls', spentAt: trip.completedAt },
     });
+    await prisma.maintenanceLog.create({
+      data: { vehicleId: vehicleRows['DL05GH3456'].id, title: 'Brake pad replacement', cost: 6500, status: 'OPEN' },
+    });
+    await prisma.maintenanceLog.create({
+      data: { vehicleId: vehicleRows['GJ01AB1234'].id, title: 'Oil change', cost: 2200, status: 'CLOSED', closedAt: new Date() },
+    });
+  }
