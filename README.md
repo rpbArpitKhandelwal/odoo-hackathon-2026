@@ -61,3 +61,12 @@ npm run dev                          # Starts API on http://localhost:5000
 ```
 
 ### 3. Frontend Initialization (in a new terminal)
+```bash
+cd frontend
+npm install
+npm run dev                          # Starts UI on http://localhost:5173
+```
+
+---
+
+## 🔐 Demo Credentials
