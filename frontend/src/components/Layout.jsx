@@ -71,3 +71,9 @@ export default function Layout() {
 
   // Close dropdowns on outside click
   useEffect(() => {
+    function onClick(e) {
+      if (topRightRef.current && !topRightRef.current.contains(e.target)) setMenu(null);
+    }
+    document.addEventListener('mousedown', onClick);
+    return () => document.removeEventListener('mousedown', onClick);
+  }, []);
