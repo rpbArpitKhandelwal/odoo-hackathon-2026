@@ -32,3 +32,16 @@ router.get('/', async (req, res, next) => {
     next(err);
   }
 });
+
+router.get('/:id', async (req, res, next) => {
+  try {
+    const driver = await prisma.driver.findUnique({
+      where: { id: Number(req.params.id) },
+      include: { trips: { orderBy: { createdAt: 'desc' }, take: 10 } },
+    });
+    if (!driver) throw new ApiError(404, 'Driver not found');
+    res.json(driver);
+  } catch (err) {
+    next(err);
+  }
+});
