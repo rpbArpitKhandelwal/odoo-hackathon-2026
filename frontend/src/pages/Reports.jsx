@@ -89,4 +89,50 @@ export default function Reports() {
         <KpiCard
           icon={<IconWallet />} tone="green" label="Total Revenue"
           value={fmtCr(totRevenue)}
-          trend={{ dir: 'up', text: `${trips.length} trips`, good: true }}
+          trend={{ dir: 'up', text: `${trips.length} trips`, good: true }}
+          sub="From completed trips"
+        />
+      </div>
+
+      <div className="chart-grid">
+        <div className="panel">
+          <div className="panel-head">
+            <div>
+              <h2>Revenue Trends</h2>
+              <div className="muted small">Last 6 months performance</div>
+            </div>
+          </div>
+          <div className="panel-body">
+            <LineChart data={revenueSeries} />
+          </div>
+        </div>
+
+        <div className="panel">
+          <div className="panel-head">
+            <div>
+              <h2>Cost Distribution</h2>
+              <div className="muted small">All-time breakdown</div>
+            </div>
+          </div>
+          <div className="panel-body">
+            <Donut data={donutData} centerLabel="Total Cost" centerValue={fmtCr(totalCost)} />
+          </div>
+        </div>
+      </div>
+
+      <div className="panel">
+        <div className="panel-head">
+          <div>
+            <h2>Operational Cost per Vehicle</h2>
+            <div className="muted small">Fuel + maintenance, ranked</div>
+          </div>
+        </div>
+        <div className="panel-body">
+          <BarList data={[...report].sort((a, b) => b.operationalCost - a.operationalCost).map((r) => ({ label: r.name, value: r.operationalCost }))} />
+        </div>
+      </div>
+
+      <div className="panel">
+        <div className="panel-head">
+          <div>
+            <h2>Vehicle Performance</h2>
