@@ -114,3 +114,10 @@ Enforced twice: `authorize(...roles)` middleware on the API (403 with a clear me
 
 | Hour | M1 · Backend core | M2 · Backend rules/reports | M3 · Frontend UI | M4 · Frontend data/integration |
 |---|---|---|---|---|
+| 0–1 | **All together:** review this doc, run setup, agree API contracts, everyone makes 1 commit |  |  |  |
+| 1–3 | Drivers CRUD + filters, RBAC checks | Trip lifecycle endpoints hands-on: test every rule with bad inputs | Drivers + Trips pages (forms, tables, status badges) | Dashboard KPIs + filters wired to API |
+| 3–5 | Maintenance open/close flow | Fuel logs, expenses, reports + CSV export | Maintenance + Fuel/Expense pages | Trips page: dispatch/complete/cancel buttons, error toasts |
+| 5–6.5 | Bug fixes from integration | Seed rich demo data | Reports page + charts (bonus) | Search/sort/filters, dark mode (bonus) |
+| 6.5–8 | **All together:** run the 9-step demo workflow end-to-end, fix issues, rehearse presentation (everyone presents one module) |  |  |  |
+
+**Git discipline (judged!):** every member commits to their own branch (`feat/drivers`, `feat/trips-ui`…), small commits with clear messages, merge to `main` via PRs at hours 3, 5, and 7.
