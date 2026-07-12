@@ -41,3 +41,17 @@ enum VehicleStatus {
   IN_SHOP
   RETIRED
 }
+
+enum DriverStatus {
+  AVAILABLE
+  ON_TRIP
+  OFF_DUTY
+  SUSPENDED
+}
+
+enum TripStatus {
+  DRAFT
+  DISPATCHED
+  COMPLETED
+  CANCELLED
+}
