@@ -127,3 +127,18 @@ model Trip {
   @@index([status])
   @@map("trips")
 }
+
+model MaintenanceLog {
+  id          Int               @id @default(autoincrement())
+  title       String // e.g. "Oil Change"
+  description String?
+  cost        Decimal           @default(0) @db.Decimal(12, 2)
+  status      MaintenanceStatus @default(OPEN)
+  openedAt    DateTime          @default(now()) @map("opened_at")
+  closedAt    DateTime?         @map("closed_at")
+
+  vehicle   Vehicle @relation(fields: [vehicleId], references: [id])
+  vehicleId Int     @map("vehicle_id")
+
+  @@map("maintenance_logs")
+}
