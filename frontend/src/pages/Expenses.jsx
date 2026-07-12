@@ -159,4 +159,56 @@ export default function Expenses() {
                   </tr>
                 ))}
                 {expenses.length === 0 && (
-                  <tr><td colSpan="5" className="muted center">No expenses yet.</td></tr>
+                  <tr><td colSpan="5" className="muted center">No expenses yet.</td></tr>
+                )}
+              </tbody>
+            </table>
+          )}
+        </div>
+        <Pager pager={pager} />
+      </div>
+
+      {form && (
+        <div className="modal-backdrop" onClick={() => setForm(null)}>
+          <form className="modal" onClick={(e) => e.stopPropagation()} onSubmit={save}>
+            <h2>{form.kind === 'fuel' ? 'Add Fuel Log' : 'Add Expense'}</h2>
+            <div className="form-grid">
+              <label>Vehicle
+                <select value={form.vehicleId} onChange={set('vehicleId')} required>
+                  <option value="">Select a vehicle…</option>
+                  {vehicles.map((v) => (
+                    <option key={v.id} value={v.id}>{v.name} ({v.regNo})</option>
+                  ))}
+                </select>
+              </label>
+              {form.kind === 'fuel' ? (
+                <>
+                  <label>Liters<input type="number" min="0.01" step="0.01" value={form.liters} onChange={set('liters')} required /></label>
+                  <label>Cost<input type="number" min="0" step="0.01" value={form.cost} onChange={set('cost')} required /></label>
+                  <label>Date<input type="date" value={form.filledAt} onChange={set('filledAt')} /></label>
+                </>
+              ) : (
+                <>
+                  <label>Category
+                    <select value={form.category} onChange={set('category')}>
+                      <option value="TOLL">Toll</option>
+                      <option value="PARKING">Parking</option>
+                      <option value="FINE">Fine</option>
+                      <option value="MISC">Misc</option>
+                    </select>
+                  </label>
+                  <label>Amount<input type="number" min="0.01" step="0.01" value={form.amount} onChange={set('amount')} required /></label>
+                  <label>Note<input value={form.note} onChange={set('note')} placeholder="NH48 tolls" /></label>
+                </>
+              )}
+            </div>
+            <div className="modal-actions">
+              <button type="button" className="btn btn-ghost" onClick={() => setForm(null)}>Cancel</button>
+              <button className="btn btn-dark">Save</button>
+            </div>
+          </form>
+        </div>
+      )}
+    </div>
+  );
+}
