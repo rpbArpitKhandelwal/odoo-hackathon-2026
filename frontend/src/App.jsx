@@ -28,3 +28,4 @@ export default function App() {
       <Route element={<Layout />}>
         <Route path="/" element={<Dashboard />} />
         <Route path="/vehicles" element={<Vehicles />} />
+        <Route path="/drivers" element={<Drivers />} />
