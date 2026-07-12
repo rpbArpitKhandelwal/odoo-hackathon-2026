@@ -5,3 +5,18 @@ const tripService = require('../services/trip.service');
 
 // RBAC: Driver owns the trip lifecycle; Fleet Manager has full access to everything
 const CAN_MANAGE = ['DRIVER', 'FLEET_MANAGER'];
+
+// GET /api/trips?status=
+router.get('/', async (req, res, next) => {
+  try {
+    const where = req.query.status ? { status: req.query.status } : {};
+    const trips = await prisma.trip.findMany({
+      where,
+      include: { vehicle: true, driver: true, createdBy: { select: { id: true, name: true } } },
+      orderBy: { createdAt: 'desc' },
+    });
+    res.json(trips);
+  } catch (err) {
+    next(err);
+  }
+});
