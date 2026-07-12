@@ -22,3 +22,14 @@ router.post('/register', async (req, res, next) => {
 
     const roleRow = await prisma.role.findUnique({ where: { name: role || 'DRIVER' } });
     if (!roleRow) throw new ApiError(400, `Unknown role: ${role}`);
+
+    const passwordHash = await bcrypt.hash(password, 10);
+    const user = await prisma.user.create({
+      data: { name: name.trim(), email: email.toLowerCase(), passwordHash, roleId: roleRow.id },
+      include: { role: true },
+    });
+    res.status(201).json({ token: signToken(user), user: { id: user.id, name: user.name, email: user.email, role: user.role.name } });
+  } catch (err) {
+    next(err);
+  }
+});
