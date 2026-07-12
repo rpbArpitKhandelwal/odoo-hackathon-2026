@@ -135,4 +135,47 @@ export default function Reports() {
       <div className="panel">
         <div className="panel-head">
           <div>
-            <h2>Vehicle Performance</h2>
+            <h2>Vehicle Performance</h2>
+            <div className="muted small">Efficiency = distance ÷ liters · Operational cost = fuel + maintenance · ROI = (revenue − operational cost) ÷ acquisition cost</div>
+          </div>
+        </div>
+        <div className="table-scroll">
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>Vehicle</th><th>Trips</th><th>Distance (km)</th><th>Fuel (L)</th>
+                <th>Efficiency (km/L)</th><th>Fuel Cost</th><th>Maintenance</th>
+                <th>Operational Cost</th><th>Revenue</th><th>ROI</th>
+              </tr>
+            </thead>
+            <tbody>
+              {report.map((r) => (
+                <tr key={r.vehicleId}>
+                  <td>
+                    <strong>{r.name}</strong>
+                    <div className="muted small mono">{r.regNo}</div>
+                  </td>
+                  <td>{r.completedTrips}</td>
+                  <td className="mono">{r.distanceKm.toLocaleString()}</td>
+                  <td className="mono">{r.fuelLiters.toLocaleString()}</td>
+                  <td className="mono">{r.fuelEfficiencyKmPerL ?? '—'}</td>
+                  <td className="mono">₹{r.fuelCost.toLocaleString()}</td>
+                  <td className="mono">₹{r.maintenanceCost.toLocaleString()}</td>
+                  <td className="mono"><strong>₹{r.operationalCost.toLocaleString()}</strong></td>
+                  <td className="mono">₹{r.revenue.toLocaleString()}</td>
+                  <td>
+                    {r.roi === null ? '—' : (
+                      <span className={`chip ${r.roi >= 0 ? 'chip-green' : 'chip-red'}`}>
+                        {r.roi >= 0 ? '↗' : '↘'} {(r.roi * 100).toFixed(1)}%
+                      </span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}
