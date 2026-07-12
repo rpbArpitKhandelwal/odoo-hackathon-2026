@@ -8,3 +8,13 @@ Read [SYSTEM_DESIGN.md](SYSTEM_DESIGN.md) first — it has the ERD, API spec, bu
 Prereqs: Node 18+, PostgreSQL (installed at `C:\Program Files\PostgreSQL\18` on this machine).
 
 ```powershell
+# 1. Create the database (enter your postgres password when prompted)
+& "C:\Program Files\PostgreSQL\18\bin\psql.exe" -U postgres -c "CREATE DATABASE transitops;"
+
+# 2. Backend
+cd backend
+copy .env.example .env        # then EDIT .env: put your real postgres password in DATABASE_URL
+npm install
+npx prisma migrate dev --name init   # creates all tables
+npm run db:seed                      # demo users, vehicles, drivers, one completed trip
+npm run dev                          # API on http://localhost:5000
