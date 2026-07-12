@@ -163,3 +163,21 @@ export default function Layout() {
               </div>
             )}
 
+            {/* ---- Profile ---- */}
+            <button className="avatar-btn" onClick={() => setMenu(menu === 'profile' ? null : 'profile')}>
+              <div className="avatar">{initials(user.name)}</div>
+              <div className="user-meta">
+                <strong>{user.name}</strong>
+                <small>{user.role.replaceAll('_', ' ')}</small>
+              </div>
+            </button>
+            {menu === 'profile' && (
+              <div className="dropdown dropdown-profile">
+                <div className="profile-card">
+                  <div className="avatar avatar-lg">{initials(user.name)}</div>
+                  <div>
+                    <strong>{user.name}</strong>
+                    <div className="muted small">{user.email}</div>
+                    <span className="chip chip-blue" style={{ marginTop: 6, display: 'inline-block' }}>
+                      {user.role.replaceAll('_', ' ')}
+                    </span>
