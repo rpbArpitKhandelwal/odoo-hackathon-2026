@@ -37,3 +37,27 @@ async function assertAssignable(tx, { vehicleId, driverId, cargoWeightKg }) {
 
   return { vehicle, driver };
 }
+
+async function createTrip(data, userId) {
+  const { source, destination, vehicleId, driverId, cargoWeightKg, plannedDistanceKm } = data;
+  if (!source || !source.trim()) throw new ApiError(400, 'Source is required');
+  if (!destination || !destination.trim()) throw new ApiError(400, 'Destination is required');
+  if (!(Number(cargoWeightKg) > 0)) throw new ApiError(400, 'Cargo weight must be a positive number');
+  if (!(Number(plannedDistanceKm) > 0)) throw new ApiError(400, 'Planned distance must be a positive number');
+
+  // Validate at creation for instant feedback (and again at dispatch for safety)
+  await assertAssignable(prisma, { vehicleId, driverId, cargoWeightKg });
+
+  return prisma.trip.create({
+    data: {
+      source: source.trim(),
+      destination: destination.trim(),
+      cargoWeightKg,
+      plannedDistanceKm,
+      vehicleId: Number(vehicleId),
+      driverId: Number(driverId),
+      createdById: userId,
+    },
+    include: { vehicle: true, driver: true },
+  });
+}
