@@ -39,3 +39,15 @@ router.post('/login', async (req, res, next) => {
   try {
     const { email, password } = req.body;
     if (!EMAIL_RE.test(email || '')) throw new ApiError(400, 'Entered email is invalid');
+
+    const user = await prisma.user.findUnique({ where: { email: email.toLowerCase() }, include: { role: true } });
+    const ok = user && (await bcrypt.compare(password || '', user.passwordHash));
+    if (!ok) throw new ApiError(401, 'Invalid email or password');
+
+    res.json({ token: signToken(user), user: { id: user.id, name: user.name, email: user.email, role: user.role.name } });
+  } catch (err) {
+    next(err);
+  }
+});
+
+module.exports = router;
