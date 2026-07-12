@@ -44,3 +44,11 @@ Role 1──* User 1──* Trip *──1 Vehicle 1──* MaintenanceLog
 | expenses | vehicle_id FK, trip_id FK?, category, amount, spent_at | tolls, parking, fines, misc |
 
 Money/weight columns are `DECIMAL`, never `FLOAT` (mention this to judges — it's a classic DB-design point).
+
+## 3. State Machines (the heart of the evaluation)
+
+**Trip:** `DRAFT → DISPATCHED → COMPLETED`, and `DRAFT|DISPATCHED → CANCELLED`. No other transition is accepted by the API.
+
+**Vehicle:** `AVAILABLE ⇄ ON_TRIP` (dispatch/complete), `AVAILABLE ⇄ IN_SHOP` (maintenance open/close), `→ RETIRED` (terminal).
+
+**Driver:** `AVAILABLE ⇄ ON_TRIP`, plus manual `OFF_DUTY` / `SUSPENDED`.
