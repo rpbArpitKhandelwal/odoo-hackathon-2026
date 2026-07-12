@@ -47,3 +47,27 @@ export default function Layout() {
   // Live notifications from real data — refreshed on route change
   useEffect(() => {
     let alive = true;
+    Promise.all([api.get('/drivers'), api.get('/maintenance?status=OPEN'), api.get('/trips?status=DRAFT')])
+      .then(([drivers, maint, drafts]) => {
+        if (!alive) return;
+        const now = new Date();
+        setAlerts([
+          ...drivers
+            .filter((d) => new Date(d.licenseExpiry) < now)
+            .map((d) => ({ tone: 'red', icon: <IconAlert size={16} />, title: 'License expired', desc: `${d.name} is blocked from dispatch.` })),
+          ...drivers
+            .filter((d) => { const dd = daysUntil(d.licenseExpiry); return dd >= 0 && dd <= 30; })
+            .map((d) => ({ tone: 'amber', icon: <IconCalendar size={16} />, title: 'License expiring soon', desc: `${d.name} — ${daysUntil(d.licenseExpiry)} days left.` })),
+          ...drivers
+            .filter((d) => d.status === 'SUSPENDED')
+            .map((d) => ({ tone: 'red', icon: <IconUser size={16} />, title: 'Driver suspended', desc: `${d.name} (safety score ${d.safetyScore}).` })),
+          ...maint.map((m) => ({ tone: 'amber', icon: <IconWrench size={16} />, title: 'Vehicle in shop', desc: `${m.vehicle.name} — ${m.title}.` })),
+          ...drafts.map((t) => ({ tone: 'blue', icon: <IconRoute size={16} />, title: 'Trip awaiting dispatch', desc: `#${t.id} ${t.source} → ${t.destination}.` })),
+        ]);
+      })
+      .catch(() => {}); // notifications are best-effort
+    return () => { alive = false; };
+  }, [menu === 'bell']);
+
+  // Close dropdowns on outside click
+  useEffect(() => {
