@@ -165,4 +165,59 @@ export default function Dashboard() {
             {alerts.length > 0 && <span className="chip chip-red">{alerts.length} active</span>}
           </div>
           <div className="panel-body" style={{ maxHeight: 320, overflowY: 'auto' }}>
-            {alerts.length === 0 && <p className="muted">All clear — no compliance or maintenance alerts. ✓</p>}
+            {alerts.length === 0 && <p className="muted">All clear — no compliance or maintenance alerts. ✓</p>}
+            {alerts.map((a, i) => (
+              <div key={i} className="alert-item">
+                <div className={`alert-ico tone-${a.tone}`}>{a.icon}</div>
+                <div>
+                  <div className="alert-title">{a.title}</div>
+                  <div className="alert-desc">{a.desc}</div>
+                  <span className="alert-tag">{a.tag}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="panel">
+        <div className="panel-head">
+          <div>
+            <h2>Live Tracking</h2>
+            <div className="muted small">Trips currently on the road</div>
+          </div>
+        </div>
+        <div className="table-scroll">
+          <table className="data-table">
+            <thead>
+              <tr><th>Trip ID</th><th>Vehicle / Driver</th><th>Route</th><th>Cargo</th><th>Status</th><th>Dispatched</th></tr>
+            </thead>
+            <tbody>
+              {active.map((t) => (
+                <tr key={t.id}>
+                  <td className="mono">#{t.id}</td>
+                  <td>
+                    <div className="cell-avatar">
+                      <div className="mini-avatar"><IconTruck size={15} /></div>
+                      <div>
+                        <strong>{t.vehicle.regNo}</strong>
+                        <div className="muted small">{t.driver.name}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><strong>{t.source}</strong> → <strong>{t.destination}</strong></td>
+                  <td>{Number(t.cargoWeightKg).toLocaleString()} kg</td>
+                  <td><span className="badge badge-dispatched">On Route</span></td>
+                  <td className="muted">{t.dispatchedAt ? new Date(t.dispatchedAt).toLocaleString() : '—'}</td>
+                </tr>
+              ))}
+              {active.length === 0 && (
+                <tr><td colSpan="6" className="muted center">No trips on the road right now — dispatch one from Trips.</td></tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}
