@@ -153,4 +153,53 @@ export default function Drivers() {
                   <td className="mono">{d.contact}</td>
                   {canWrite && (
                     <td className="row-actions">
-                      <button className="btn btn-ghost btn-sm" onClick={() => setForm({ ...d, licenseExpiry: d.licenseExpiry.slice(0, 10) })}>Edit</button>
+                      <button className="btn btn-ghost btn-sm" onClick={() => setForm({ ...d, licenseExpiry: d.licenseExpiry.slice(0, 10) })}>Edit</button>
+                      <button className="btn btn-ghost btn-sm danger" onClick={() => remove(d)}>Delete</button>
+                    </td>
+                  )}
+                </tr>
+              ))}
+              {drivers.length === 0 && (
+                <tr><td colSpan="7" className="muted center">No drivers match the current filters.</td></tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+        <Pager pager={pager} />
+      </div>
+
+      {form && (
+        <div className="modal-backdrop" onClick={() => setForm(null)}>
+          <form className="modal" onClick={(e) => e.stopPropagation()} onSubmit={save}>
+            <h2>{form.id ? 'Edit Driver' : 'Register Driver'}</h2>
+            <div className="form-grid">
+              <label>Name<input value={form.name} onChange={set('name')} placeholder="Alex Kumar" required /></label>
+              <label>License No<input value={form.licenseNo} onChange={set('licenseNo')} placeholder="DL-2024-010" required /></label>
+              <label>License Category
+                <select value={form.licenseCategory} onChange={set('licenseCategory')}>
+                  <option>LMV</option><option>HMV</option><option>MCWG</option><option>TRANS</option>
+                </select>
+              </label>
+              <label>License Expiry<input type="date" value={form.licenseExpiry} onChange={set('licenseExpiry')} required /></label>
+              <label>Contact (10 digits)<input value={form.contact} onChange={set('contact')} placeholder="9876500001" pattern="\d{10}" required /></label>
+              <label>Safety Score (0–100)<input type="number" min="0" max="100" value={form.safetyScore} onChange={set('safetyScore')} /></label>
+              {form.id && (
+                <label>Status
+                  <select value={form.status} onChange={set('status')}>
+                    <option value="AVAILABLE">Available</option>
+                    <option value="OFF_DUTY">Off Duty</option>
+                    <option value="SUSPENDED">Suspended</option>
+                  </select>
+                </label>
+              )}
+            </div>
+            <div className="modal-actions">
+              <button type="button" className="btn btn-ghost" onClick={() => setForm(null)}>Cancel</button>
+              <button className="btn btn-dark">{form.id ? 'Save Changes' : 'Register Driver'}</button>
+            </div>
+          </form>
+        </div>
+      )}
+    </div>
+  );
+}
