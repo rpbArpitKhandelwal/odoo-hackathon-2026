@@ -34,3 +34,10 @@ model User {
 
   @@map("users")
 }
+
+enum VehicleStatus {
+  AVAILABLE
+  ON_TRIP
+  IN_SHOP
+  RETIRED
+}
