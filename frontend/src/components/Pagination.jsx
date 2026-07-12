@@ -8,4 +8,15 @@ export function usePager(items, perPage = 8) {
   const current = Math.min(page, pages);
   const slice = useMemo(() => items.slice((current - 1) * perPage, current * perPage), [items, current, perPage]);
   return { slice, page: current, pages, setPage, total: items.length, perPage };
-}
+}
+
+export function Pager({ pager }) {
+  const { page, pages, setPage, total, perPage, slice } = pager;
+  if (total === 0) return null;
+  const from = (page - 1) * perPage + 1;
+  const to = from + slice.length - 1;
+  const nums = [];
+  for (let i = 1; i <= pages; i++) {
+    if (pages > 7 && i > 3 && i < pages - 2 && Math.abs(i - page) > 1) {
+      if (nums[nums.length - 1] !== '…') nums.push('…');
+    } else nums.push(i);
