@@ -18,3 +18,18 @@ npm install
 npx prisma migrate dev --name init   # creates all tables
 npm run db:seed                      # demo users, vehicles, drivers, one completed trip
 npm run dev                          # API on http://localhost:5000
+
+# 3. Frontend (second terminal)
+cd frontend
+npm install
+npm run dev                          # app on http://localhost:5173
+```
+
+## Demo logins (password: `Password@123`)
+
+| Role | Email |
+|---|---|
+| Fleet Manager | manager@transitops.com |
+| Driver | driver@transitops.com |
+| Safety Officer | safety@transitops.com |
+| Financial Analyst | analyst@transitops.com |
