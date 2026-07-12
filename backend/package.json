@@ -1,0 +1,5 @@
+{
+  "name": "transitops-backend",
+  "version": "1.0.0",
+  "description": "TransitOps REST API - Express + Prisma + PostgreSQL",
+  "main": "src/server.js",
