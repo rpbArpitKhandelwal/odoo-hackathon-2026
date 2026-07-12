@@ -71,3 +71,37 @@ export default function Login() {
         <label>
           Password
           <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder={isSignup ? 'Minimum 8 characters' : '••••••••'}
+            minLength={isSignup ? 8 : undefined}
+            required
+          />
+        </label>
+        {isSignup && (
+          <label>
+            Role
+            <select value={role} onChange={(e) => setRole(e.target.value)}>
+              {ROLES.map((r) => (
+                <option key={r.value} value={r.value}>{r.label}</option>
+              ))}
+            </select>
+          </label>
+        )}
+
+        <button className="btn btn-blue" disabled={loading} style={{ justifyContent: 'center' }}>
+          {loading ? (isSignup ? 'Creating account…' : 'Signing in…') : isSignup ? 'Create Account' : 'Sign In'}
+        </button>
+
+        <p className="muted small center">
+          {isSignup ? (
+            <>Already have an account? <Link className="auth-link" to="/login">Sign in</Link></>
+          ) : (
+            <>New to TransitOps? <Link className="auth-link" to="/signup">Create an account</Link></>
+          )}
+        </p>
+      </form>
+    </div>
+  );
+}

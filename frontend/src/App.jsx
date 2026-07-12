@@ -29,3 +29,13 @@ export default function App() {
         <Route path="/" element={<Dashboard />} />
         <Route path="/vehicles" element={<Vehicles />} />
         <Route path="/drivers" element={<Drivers />} />
+        <Route path="/trips" element={<Trips />} />
+        <Route path="/maintenance" element={<Maintenance />} />
+        {/* RBAC matrix: Drivers have no access to Fuel Logs / Expenses */}
+        {user.role !== 'DRIVER' && <Route path="/expenses" element={<Expenses />} />}
+        <Route path="/reports" element={<Reports />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Route>
+    </Routes>
+  );
+}
