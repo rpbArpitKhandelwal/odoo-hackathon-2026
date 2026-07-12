@@ -43,3 +43,12 @@ By utilizing strict database constraints and atomic state machine transitions, T
 ### 1. Database Setup
 Create a new PostgreSQL database named `transitops`.
 ```powershell
+"C:\Program Files\PostgreSQL\18\bin\psql.exe" -U postgres -c "CREATE DATABASE transitops;"
+```
+
+### 2. Backend Initialization
+```bash
+cd backend
+# Duplicate the environment template
+copy .env.example .env
+# Important: Edit .env and put your real postgres password in DATABASE_URL
