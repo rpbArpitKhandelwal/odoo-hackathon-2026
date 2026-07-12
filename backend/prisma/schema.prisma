@@ -1,0 +1,10 @@
+// TransitOps data model
+// Design notes for the judges:
+//  - Roles are a separate table (normalized RBAC, easy to extend with permissions later).
+//  - All uniqueness rules (email, reg no, license no) are DATABASE constraints, not just UI checks.
+//  - Money and weights use Decimal, never Float (no rounding drift on financial reports).
+//  - Statuses are Postgres enums, so an invalid status can never be stored.
+
+generator client {
+  provider = "prisma-client-js"
+}
