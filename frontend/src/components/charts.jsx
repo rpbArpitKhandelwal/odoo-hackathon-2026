@@ -24,4 +24,31 @@ export function LineChart({ data, height = 240, prefix = '₹' }) {
           <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.22" />
           <stop offset="100%" stopColor="var(--accent)" stopOpacity="0.02" />
         </linearGradient>
-      </defs>
+      </defs>
+      {ticks.map((t) => (
+        <g key={t}>
+          <line x1={PAD.l} x2={W - PAD.r} y1={y(t)} y2={y(t)} className="grid-line" />
+          <text x={PAD.l - 10} y={y(t) + 4} textAnchor="end" className="axis-text">{prefix}{fmt(t)}</text>
+        </g>
+      ))}
+      <path d={area} fill="url(#lc-fill)" />
+      <path d={path} fill="none" stroke="var(--accent)" strokeWidth="2.5" strokeLinejoin="round" />
+      {pts.map(([px, py], i) => (
+        <g key={i}>
+          <circle cx={px} cy={py} r="4.5" fill="var(--surface)" stroke="var(--accent)" strokeWidth="2.5" />
+          <text x={px} y={H - 10} textAnchor="middle" className="axis-text">{data[i].label}</text>
+        </g>
+      ))}
+    </svg>
+  );
+}
+
+// Donut chart: data = [{ label, value, color }]
+export function Donut({ data, centerLabel, centerValue, size = 210 }) {
+  const total = data.reduce((s, d) => s + d.value, 0);
+  const R = 80;
+  const STROKE = 30;
+  const C = 2 * Math.PI * R;
+  let offset = 0;
+  return (
+    <div className="donut-wrap">
