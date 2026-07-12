@@ -14,3 +14,5 @@ export const IconRoute = (p) => (
 export const IconTruck = (p) => (
   <I {...p}><path d="M1 8h13v9H1z" /><path d="M14 11h4l3 3v3h-7" /><circle cx="6" cy="19" r="1.8" /><circle cx="17" cy="19" r="1.8" /></I>
 );
+export const IconUser = (p) => (
+  <I {...p}><circle cx="12" cy="8" r="4" /><path d="M4 21c0-4 3.5-6 8-6s8 2 8 6" /></I>
