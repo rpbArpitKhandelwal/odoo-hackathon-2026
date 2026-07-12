@@ -61,3 +61,12 @@ async function createTrip(data, userId) {
     include: { vehicle: true, driver: true },
   });
 }
+
+// DRAFT -> DISPATCHED: vehicle & driver atomically become ON_TRIP
+async function dispatchTrip(tripId) {
+  return prisma.$transaction(async (tx) => {
+    const trip = await tx.trip.findUnique({ where: { id: tripId } });
+    if (!trip) throw new ApiError(404, 'Trip not found');
+    if (trip.status !== 'DRAFT') throw new ApiError(400, `Only Draft trips can be dispatched (current: ${trip.status})`);
+
+    // Re-check every rule at the moment of dispatch — state may have changed since the draft
