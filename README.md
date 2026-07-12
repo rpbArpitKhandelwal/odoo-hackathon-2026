@@ -70,3 +70,12 @@ npm run dev                          # Starts UI on http://localhost:5173
 ---
 
 ## 🔐 Demo Credentials
+
+Use the following credentials to explore the platform across different roles. The password for all accounts is: `Password@123`
+
+| Role | Email | Domain Access |
+|---|---|---|
+| **Fleet Manager** | `manager@transitops.com` | Full System Access |
+| **Driver** | `driver@transitops.com` | Trips & Dispatching |
+| **Safety Officer** | `safety@transitops.com` | Driver Management & Compliance |
+| **Financial Analyst**| `analyst@transitops.com` | Costs, Fuel, and ROI Reports |
