@@ -93,4 +93,52 @@ export default function Vehicles() {
         <KpiCard icon={<IconRoute />} tone="green" label="Active Units (On Trip)" value={count('ON_TRIP')} />
         <KpiCard icon={<IconWrench />} tone="red" label="Units in Maintenance" value={count('IN_SHOP')} />
         <KpiCard icon={<IconMoon />} tone="amber" label="Idle Units (Available)" value={count('AVAILABLE')} />
-      </div>
+      </div>
+
+      <div className="panel">
+        <div className="panel-head">
+          <h2>Vehicle Roster</h2>
+          <div className="filters">
+            <div className="topbar-search" style={{ maxWidth: 240 }}>
+              <IconSearch size={15} />
+              <input placeholder="Search roster…" value={search} onChange={(e) => setSearch(e.target.value)} />
+            </div>
+            <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+              <option value="">All statuses</option>
+              <option value="AVAILABLE">Available</option>
+              <option value="ON_TRIP">On Trip</option>
+              <option value="IN_SHOP">In Shop</option>
+              <option value="RETIRED">Retired</option>
+            </select>
+          </div>
+        </div>
+        <div className="table-scroll">
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>Reg No</th><th>Model / Make</th><th>Type</th><th>Max Load (kg)</th>
+                <th>Odometer (km)</th><th>Region</th><th>Current Status</th>
+                {canWrite && <th>Actions</th>}
+              </tr>
+            </thead>
+            <tbody>
+              {pager.slice.map((v) => (
+                <tr key={v.id}>
+                  <td className="mono">{v.regNo}</td>
+                  <td><strong>{v.name}</strong></td>
+                  <td>{v.type}</td>
+                  <td>{Number(v.maxLoadKg).toLocaleString()}</td>
+                  <td className="mono">{Number(v.odometerKm).toLocaleString()}</td>
+                  <td>{v.region || '—'}</td>
+                  <td><span className={`badge badge-${v.status.toLowerCase()}`}>{v.status.replaceAll('_', ' ')}</span></td>
+                  {canWrite && (
+                    <td className="row-actions">
+                      <button className="btn btn-ghost btn-sm" onClick={() => setForm({ ...v })}>Edit</button>
+                      <button className="btn btn-ghost btn-sm danger" onClick={() => remove(v)}>Delete</button>
+                    </td>
+                  )}
+                </tr>
+              ))}
+              {vehicles.length === 0 && (
+                <tr><td colSpan="8" className="muted center">No vehicles match the current filters.</td></tr>
+              )}
