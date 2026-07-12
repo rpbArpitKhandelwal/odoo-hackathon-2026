@@ -24,3 +24,27 @@ router.get('/', authorize(...CAN_READ), async (req, res, next) => {
     next(err);
   }
 });
+
+router.post('/', authorize(...CAN_WRITE), async (req, res, next) => {
+  try {
+    const { vehicleId, tripId, category, amount, note, spentAt } = req.body;
+    if (!CATEGORIES.includes(category)) throw new ApiError(400, `Category must be one of: ${CATEGORIES.join(', ')}`);
+    if (!(Number(amount) > 0)) throw new ApiError(400, 'Amount must be a positive number');
+    const expense = await prisma.expense.create({
+      data: {
+        vehicleId: Number(vehicleId),
+        tripId: tripId ? Number(tripId) : null,
+        category,
+        amount,
+        note: note || null,
+        spentAt: spentAt ? new Date(spentAt) : new Date(),
+      },
+      include: { vehicle: true },
+    });
+    res.status(201).json(expense);
+  } catch (err) {
+    next(err);
+  }
+});
+
+module.exports = router;
