@@ -119,4 +119,65 @@ export default function Trips() {
             <option value="COMPLETED">Completed</option>
             <option value="CANCELLED">Cancelled</option>
           </select>
-        </div>
+        </div>
+        <div className="table-scroll">
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>ID</th><th>Route</th><th>Vehicle</th><th>Driver</th>
+                <th>Cargo (kg)</th><th>Distance (km)</th><th>Status</th>
+                {canManage && <th>Actions</th>}
+              </tr>
+            </thead>
+            <tbody>
+              {pager.slice.map((t) => (
+                <tr key={t.id}>
+                  <td className="mono">#{t.id}</td>
+                  <td><strong>{t.source}</strong> → <strong>{t.destination}</strong></td>
+                  <td>
+                    <strong>{t.vehicle.name}</strong>
+                    <div className="muted small mono">{t.vehicle.regNo}</div>
+                  </td>
+                  <td>{t.driver.name}</td>
+                  <td>{Number(t.cargoWeightKg).toLocaleString()}</td>
+                  <td>
+                    {t.status === 'COMPLETED' && t.endOdometerKm
+                      ? `${(Number(t.endOdometerKm) - Number(t.startOdometerKm)).toLocaleString()} actual`
+                      : `${Number(t.plannedDistanceKm).toLocaleString()} planned`}
+                  </td>
+                  <td><span className={`badge badge-${t.status.toLowerCase()}`}>{t.status}</span></td>
+                  {canManage && (
+                    <td className="row-actions">
+                      {t.status === 'DRAFT' && (
+                        <>
+                          <button className="btn btn-blue btn-sm" onClick={() => act(t, 'dispatch')}>Dispatch</button>
+                          <button className="btn btn-ghost btn-sm danger" onClick={() => act(t, 'cancel')}>Cancel</button>
+                        </>
+                      )}
+                      {t.status === 'DISPATCHED' && (
+                        <>
+                          <button className="btn btn-blue btn-sm" onClick={() => setCompleting(t)}>Complete</button>
+                          <button className="btn btn-ghost btn-sm danger" onClick={() => act(t, 'cancel')}>Cancel</button>
+                        </>
+                      )}
+                    </td>
+                  )}
+                </tr>
+              ))}
+              {trips.length === 0 && (
+                <tr><td colSpan="8" className="muted center">No trips yet — create one to get started.</td></tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+        <Pager pager={pager} />
+      </div>
+
+      {form && (
+        <div className="modal-backdrop" onClick={() => setForm(null)}>
+          <form className="modal" onClick={(e) => e.stopPropagation()} onSubmit={createTrip}>
+            <h2>New Trip</h2>
+            <p className="muted small">Only dispatch-legal vehicles and assignable drivers appear below — business rules are enforced again at dispatch.</p>
+            <div className="form-grid">
+              <label>Source<input value={form.source} onChange={set('source')} placeholder="Ahmedabad" required /></label>
+              <label>Destination<input value={form.destination} onChange={set('destination')} placeholder="Mumbai" required /></label>
