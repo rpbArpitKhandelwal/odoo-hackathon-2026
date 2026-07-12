@@ -107,3 +107,5 @@ Enforced twice: `authorize(...roles)` middleware on the API (403 with a clear me
 
 - **Fleet Utilization %** = vehicles ON_TRIP ÷ (total − RETIRED) × 100
 - **Fuel Efficiency** = total distance (odometer deltas of completed trips) ÷ total liters
+- **Operational Cost / vehicle** = Σ fuel cost + Σ maintenance cost (+ Σ other expenses shown separately)
+- **Vehicle ROI** = (Σ trip revenue − (maintenance + fuel)) ÷ acquisition cost
