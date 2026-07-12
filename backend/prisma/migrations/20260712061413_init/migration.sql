@@ -58,3 +58,33 @@ CREATE TABLE "drivers" (
     "safety_score" INTEGER NOT NULL DEFAULT 100,
     "status" "DriverStatus" NOT NULL DEFAULT 'AVAILABLE',
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "drivers_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "trips" (
+    "id" SERIAL NOT NULL,
+    "source" TEXT NOT NULL,
+    "destination" TEXT NOT NULL,
+    "cargo_weight_kg" DECIMAL(10,2) NOT NULL,
+    "planned_distance_km" DECIMAL(10,1) NOT NULL,
+    "status" "TripStatus" NOT NULL DEFAULT 'DRAFT',
+    "start_odometer_km" DECIMAL(12,1),
+    "end_odometer_km" DECIMAL(12,1),
+    "revenue" DECIMAL(12,2) NOT NULL DEFAULT 0,
+    "dispatched_at" TIMESTAMP(3),
+    "completed_at" TIMESTAMP(3),
+    "cancelled_at" TIMESTAMP(3),
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "vehicle_id" INTEGER NOT NULL,
+    "driver_id" INTEGER NOT NULL,
+    "created_by" INTEGER NOT NULL,
+
+    CONSTRAINT "trips_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "maintenance_logs" (
+    "id" SERIAL NOT NULL,
