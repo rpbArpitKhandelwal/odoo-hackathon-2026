@@ -67,3 +67,14 @@ Money/weight columns are `DECIMAL`, never `FLOAT` (mention this to judges — it
 | Cancel dispatched trip ⇒ both restored to AVAILABLE | Same pattern |
 | Open maintenance ⇒ vehicle IN_SHOP | Maintenance service transaction (rejected if vehicle ON_TRIP) |
 | Close maintenance ⇒ AVAILABLE unless RETIRED | Maintenance service transaction |
+
+## 4. API Design (REST)
+
+Base: `/api` · Auth: `Authorization: Bearer <JWT>` · All non-auth routes require a valid token.
+
+| Method & path | Purpose | Roles (writes) |
+|---|---|---|
+| POST /auth/register, /auth/login | JWT auth, bcrypt | public |
+| GET/POST/PUT/DELETE /vehicles | CRUD, `?status=&type=&region=&available=true` filters | FLEET_MANAGER |
+| GET/POST/PUT/DELETE /drivers | CRUD, `?status=` filter | SAFETY_OFFICER, FLEET_MANAGER |
+| GET/POST /trips, PUT /trips/:id | Create draft / edit draft | DRIVER, FLEET_MANAGER |
