@@ -6,3 +6,8 @@ class ApiError extends Error {
     this.status = status;
   }
 }
+
+function errorHandler(err, _req, res, _next) {
+  if (err instanceof ApiError) {
+    return res.status(err.status).json({ error: err.message });
+  }
