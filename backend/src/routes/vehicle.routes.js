@@ -47,3 +47,24 @@ router.get('/:id', async (req, res, next) => {
     next(err);
   }
 });
+
+router.post('/', authorize('FLEET_MANAGER'), async (req, res, next) => {
+  try {
+    validateVehicle(req.body);
+    const { regNo, name, type, maxLoadKg, odometerKm, acquisitionCost, region } = req.body;
+    const vehicle = await prisma.vehicle.create({
+      data: {
+        regNo: regNo.trim().toUpperCase(),
+        name: name.trim(),
+        type: type.trim(),
+        maxLoadKg,
+        odometerKm: odometerKm || 0,
+        acquisitionCost,
+        region: region || null,
+      },
+    });
+    res.status(201).json(vehicle);
+  } catch (err) {
+    next(err); // duplicate regNo -> P2002 -> 409 via errorHandler
+  }
+});
