@@ -58,3 +58,12 @@ Money/weight columns are `DECIMAL`, never `FLOAT` (mention this to judges — it
 | Rule | Enforcement |
 |---|---|
 | Registration number unique | DB `UNIQUE` constraint + API 409 error |
+| Retired / In-Shop vehicles never in dispatch selection | API: `GET /vehicles?available=true` returns only AVAILABLE; re-checked at dispatch |
+| Expired-license / Suspended drivers can't be assigned | Trip service: `license_expiry >= today` and `status = AVAILABLE` checks |
+| On-Trip vehicle/driver can't be double-assigned | Status check **inside the dispatch transaction** (race-safe) |
+| Cargo weight ≤ max load capacity | Trip service validation on create **and** dispatch |
+| Dispatch ⇒ vehicle+driver ON_TRIP | Single `prisma.$transaction` — atomic |
+| Complete ⇒ both back to AVAILABLE, odometer updated | Same transaction; vehicle.odometer = end odometer |
+| Cancel dispatched trip ⇒ both restored to AVAILABLE | Same pattern |
+| Open maintenance ⇒ vehicle IN_SHOP | Maintenance service transaction (rejected if vehicle ON_TRIP) |
+| Close maintenance ⇒ AVAILABLE unless RETIRED | Maintenance service transaction |
