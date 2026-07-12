@@ -102,3 +102,8 @@ Every error returns `{ "error": "human-readable message" }` with a proper status
 The Fleet Manager is the admin persona with full access to every module; each specialist role owns its domain (Driver → trips, Safety Officer → drivers, Financial Analyst → costs) and Drivers are fully locked out of financial data.
 
 Enforced twice: `authorize(...roles)` middleware on the API (403 with a clear message), and the UI hides buttons/nav items the role can't use (Drivers never see the Expenses page). The dashboard reorders its KPI cards per role so each persona leads with their own lens.
+
+## 6. KPI & Report Formulas
+
+- **Fleet Utilization %** = vehicles ON_TRIP ÷ (total − RETIRED) × 100
+- **Fuel Efficiency** = total distance (odometer deltas of completed trips) ÷ total liters
