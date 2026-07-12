@@ -82,3 +82,21 @@ router.put('/:id', authorize('FLEET_MANAGER'), async (req, res, next) => {
     next(err);
   }
 });
+
+// Retire instead of hard delete when the vehicle has history (keeps reports intact)
+router.delete('/:id', authorize('FLEET_MANAGER'), async (req, res, next) => {
+  try {
+    const id = Number(req.params.id);
+    const tripCount = await prisma.trip.count({ where: { vehicleId: id } });
+    if (tripCount > 0) {
+      const vehicle = await prisma.vehicle.update({ where: { id }, data: { status: 'RETIRED' } });
+      return res.json({ retired: true, vehicle });
+    }
+    await prisma.vehicle.delete({ where: { id } });
+    res.json({ deleted: true });
+  } catch (err) {
+    next(err);
+  }
+});
+
+module.exports = router;
