@@ -181,3 +181,10 @@ export default function Layout() {
                     <span className="chip chip-blue" style={{ marginTop: 6, display: 'inline-block' }}>
                       {user.role.replaceAll('_', ' ')}
                     </span>
+                  </div>
+                </div>
+                <button className="dropdown-item" onClick={() => { setMenu(null); navigate('/reports'); }}>
+                  <IconChart size={16} /> My Reports
+                </button>
+                <button className="dropdown-item" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
+                  {theme === 'light' ? <IconMoon size={16} /> : <IconSun size={16} />} Switch to {theme === 'light' ? 'dark' : 'light'} mode
