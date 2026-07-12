@@ -17,3 +17,28 @@ router.get('/', async (req, res, next) => {
     next(err);
   }
 });
+
+// POST /api/maintenance — opening a log flips the vehicle to IN_SHOP (atomic)
+router.post('/', authorize('FLEET_MANAGER'), async (req, res, next) => {
+  try {
+    const { vehicleId, title, description, cost } = req.body;
+    if (!title || !title.trim()) throw new ApiError(400, 'Maintenance title is required (e.g. "Oil Change")');
+
+    const log = await prisma.$transaction(async (tx) => {
+      const vehicle = await tx.vehicle.findUnique({ where: { id: Number(vehicleId) } });
+      if (!vehicle) throw new ApiError(404, 'Vehicle not found');
+      if (vehicle.status === 'ON_TRIP') throw new ApiError(409, `${vehicle.name} is on a trip — complete or cancel the trip first`);
+      if (vehicle.status === 'RETIRED') throw new ApiError(400, `${vehicle.name} is retired`);
+
+      // Rule: active maintenance -> vehicle In Shop, hidden from dispatch
+      await tx.vehicle.update({ where: { id: vehicle.id }, data: { status: 'IN_SHOP' } });
+      return tx.maintenanceLog.create({
+        data: { vehicleId: vehicle.id, title: title.trim(), description: description || null, cost: cost || 0 },
+        include: { vehicle: true },
+      });
+    });
+    res.status(201).json(log);
+  } catch (err) {
+    next(err);
+  }
+});
