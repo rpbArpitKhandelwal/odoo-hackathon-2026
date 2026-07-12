@@ -1,6 +1,9 @@
 node_modules/
-dist/
 .env
-*.log
+.env.local
+.env.*.local
+dist/
+build/
 .DS_Store
-.claude/
+*.db
+
