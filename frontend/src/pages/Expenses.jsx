@@ -105,4 +105,58 @@ export default function Expenses() {
             Other Expenses ({expenses.length})
           </button>
         </div>
-
+
+        <div className="table-scroll">
+          {tab === 'fuel' ? (
+            <table className="data-table">
+              <thead>
+                <tr><th>Vehicle</th><th>Liters</th><th>Cost</th><th>Date</th><th>Linked Trip</th></tr>
+              </thead>
+              <tbody>
+                {fuelPager.slice.map((f) => (
+                  <tr key={f.id}>
+                    <td>
+                      <div className="cell-avatar">
+                        <div className="mini-avatar"><IconTruck size={15} /></div>
+                        <div>
+                          <strong>{f.vehicle.regNo}</strong>
+                          <div className="muted small">{f.vehicle.name}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="mono">{Number(f.liters).toLocaleString()}</td>
+                    <td className="mono">₹{Number(f.cost).toLocaleString()}</td>
+                    <td className="muted">{new Date(f.filledAt).toLocaleDateString()}</td>
+                    <td className="muted">{f.trip ? `#${f.trip.id} ${f.trip.source} → ${f.trip.destination}` : '—'}</td>
+                  </tr>
+                ))}
+                {fuelLogs.length === 0 && (
+                  <tr><td colSpan="5" className="muted center">No fuel logs yet.</td></tr>
+                )}
+              </tbody>
+            </table>
+          ) : (
+            <table className="data-table">
+              <thead>
+                <tr><th>Vehicle</th><th>Category</th><th>Amount</th><th>Note</th><th>Date</th></tr>
+              </thead>
+              <tbody>
+                {expPager.slice.map((x) => (
+                  <tr key={x.id}>
+                    <td>
+                      <div className="cell-avatar">
+                        <div className="mini-avatar"><IconTruck size={15} /></div>
+                        <div>
+                          <strong>{x.vehicle.regNo}</strong>
+                          <div className="muted small">{x.vehicle.name}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td><span className="badge badge-draft">{x.category}</span></td>
+                    <td className="mono">₹{Number(x.amount).toLocaleString()}</td>
+                    <td className="muted">{x.note || '—'}</td>
+                    <td className="muted">{new Date(x.spentAt).toLocaleDateString()}</td>
+                  </tr>
+                ))}
+                {expenses.length === 0 && (
+                  <tr><td colSpan="5" className="muted center">No expenses yet.</td></tr>
