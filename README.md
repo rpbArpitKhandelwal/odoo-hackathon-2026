@@ -1,68 +1,89 @@
-# TransitOps — Smart Transport Operations Platform
+<div align="center">
+  <h1>🚚 TransitOps</h1>
+  <p><strong>Smart Transport Operations Platform</strong></p>
+  <p>
+    <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
+    <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="Node.js" />
+    <img src="https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white" alt="Express" />
+    <img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL" />
+    <img src="https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white" alt="Prisma" />
+  </p>
+</div>
 
-Odoo Hackathon project. **React + Express + PostgreSQL (Prisma).**
-Read [SYSTEM_DESIGN.md](SYSTEM_DESIGN.md) first — it has the ERD, API spec, business-rule mapping, 8-hour plan, and demo script.
+---
 
-## One-time setup (each member, ~5 minutes)
+**TransitOps** is a comprehensive, full-stack fleet management solution built for the Odoo Hackathon. It is designed to handle complex transportation workflows, including dispatching, vehicle maintenance tracking, driver management, and financial analytics. 
 
-Prereqs: Node 18+, PostgreSQL (installed at `C:\Program Files\PostgreSQL\18` on this machine).
+By utilizing strict database constraints and atomic state machine transitions, TransitOps ensures high data integrity and a seamless operational experience.
 
+## ✨ Key Features
+
+- **Strict State Machine Architecture**: Complex workflows (like vehicle dispatches and maintenance) are handled atomically inside database transactions. A vehicle cannot be dispatched if it is currently `IN_SHOP` or already `ON_TRIP`.
+- **Role-Based Access Control (RBAC)**: Distinct personas (`FLEET_MANAGER`, `DRIVER`, `SAFETY_OFFICER`, `FINANCIAL_ANALYST`) ensure users only see and interact with data relevant to their role.
+- **Graceful Error Handling**: Validation rules (e.g., overweight cargo, expired licenses, duplicate registration numbers) return clear, human-readable UI alerts.
+- **Live KPI Dashboard**: Instant visibility into Fleet Utilization, Fuel Efficiency, Operational Costs, and Vehicle ROI, automatically tailored for the active user's role.
+
+---
+
+## 🛠 Tech Stack
+
+- **Frontend**: React (Vite) with a modern, responsive UI.
+- **Backend**: Node.js & Express.js REST API.
+- **Database**: PostgreSQL with Prisma ORM for type-safe queries and robust schema migrations.
+- **Authentication**: Stateless JWT authentication with Bcrypt password hashing.
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js v18+
+- PostgreSQL v18 (Local database)
+
+### 1. Database Setup
+Create a new PostgreSQL database named `transitops`.
 ```powershell
-# 1. Create the database (enter your postgres password when prompted)
-& "C:\Program Files\PostgreSQL\18\bin\psql.exe" -U postgres -c "CREATE DATABASE transitops;"
+"C:\Program Files\PostgreSQL\18\bin\psql.exe" -U postgres -c "CREATE DATABASE transitops;"
+```
 
-# 2. Backend
+### 2. Backend Initialization
+```bash
 cd backend
-copy .env.example .env        # then EDIT .env: put your real postgres password in DATABASE_URL
-npm install
-npx prisma migrate dev --name init   # creates all tables
-npm run db:seed                      # demo users, vehicles, drivers, one completed trip
-npm run dev                          # API on http://localhost:5000
+# Duplicate the environment template
+copy .env.example .env
+# Important: Edit .env and put your real postgres password in DATABASE_URL
 
-# 3. Frontend (second terminal)
+# Install dependencies and setup the database
+npm install
+npx prisma migrate dev --name init   # Applies schema
+npm run db:seed                      # Seeds demo data
+npm run dev                          # Starts API on http://localhost:5000
+```
+
+### 3. Frontend Initialization (in a new terminal)
+```bash
 cd frontend
 npm install
-npm run dev                          # app on http://localhost:5173
+npm run dev                          # Starts UI on http://localhost:5173
 ```
 
-## Demo logins (password: `Password@123`)
+---
 
-| Role | Email |
-|---|---|
-| Fleet Manager | manager@transitops.com |
-| Driver | driver@transitops.com |
-| Safety Officer | safety@transitops.com |
-| Financial Analyst | analyst@transitops.com |
+## 🔐 Demo Credentials
 
-## Where things live
+Use the following credentials to explore the platform across different roles. The password for all accounts is: `Password@123`
 
-```
-backend/
-  prisma/schema.prisma        ← the ERD in code (show this to judges)
-  prisma/seed.js              ← demo data incl. edge cases (expired license, suspended driver)
-  src/middleware/auth.js      ← JWT + RBAC (authorize('FLEET_MANAGER', ...))
-  src/services/trip.service.js← ALL mandatory business rules, in DB transactions ★
-  src/routes/*.routes.js      ← one file per module
-frontend/
-  src/pages/Vehicles.jsx      ← finished CRUD page: copy this pattern
-  src/pages/{Drivers,Trips,Maintenance,Expenses,Reports}.jsx ← TODO stubs with
-                                exact instructions + API endpoints in the top comment
-```
+| Role | Email | Domain Access |
+|---|---|---|
+| **Fleet Manager** | `manager@transitops.com` | Full System Access |
+| **Driver** | `driver@transitops.com` | Trips & Dispatching |
+| **Safety Officer** | `safety@transitops.com` | Driver Management & Compliance |
+| **Financial Analyst**| `analyst@transitops.com` | Costs, Fuel, and ROI Reports |
 
-## Team TODO board (see SYSTEM_DESIGN.md §7 for the hour-by-hour split)
+---
 
-- [ ] Drivers page (pattern: Vehicles.jsx)
-- [ ] Trips page — dispatch/complete/cancel buttons + error alerts (most demo-critical)
-- [ ] Maintenance page
-- [ ] Fuel & Expenses page
-- [ ] Reports page + CSV download button
-- [ ] Bonus: charts, dark mode, search/sort everywhere
+## 📚 System Design & Architecture
 
-## Git workflow (judged!)
+For a deep dive into the underlying architecture, database Entity-Relationship Diagram (ERD), API specifications, and business rules, please refer to the [System Design Document](./SYSTEM_DESIGN.md).
 
-Everyone commits. Branch per feature (`feat/trips-ui`), small commits, merge via PR.
-
-```powershell
-git checkout -b feat/<your-feature>
-git add . ; git commit -m "feat: drivers CRUD page with license-expiry highlight"
-```
+> Built with ❤️ for the Odoo Hackathon.
