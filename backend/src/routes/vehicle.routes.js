@@ -34,3 +34,16 @@ router.get('/', async (req, res, next) => {
     next(err);
   }
 });
+
+router.get('/:id', async (req, res, next) => {
+  try {
+    const vehicle = await prisma.vehicle.findUnique({
+      where: { id: Number(req.params.id) },
+      include: { maintenanceLogs: true, fuelLogs: true, expenses: true },
+    });
+    if (!vehicle) throw new ApiError(404, 'Vehicle not found');
+    res.json(vehicle);
+  } catch (err) {
+    next(err);
+  }
+});
