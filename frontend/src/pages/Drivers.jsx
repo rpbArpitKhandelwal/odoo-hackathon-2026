@@ -101,4 +101,56 @@ export default function Drivers() {
             <div className="topbar-search" style={{ maxWidth: 240 }}>
               <IconSearch size={15} />
               <input placeholder="Search drivers…" value={search} onChange={(e) => setSearch(e.target.value)} />
-            </div>
+            </div>
+            <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+              <option value="">All statuses</option>
+              <option value="AVAILABLE">Available</option>
+              <option value="ON_TRIP">On Trip</option>
+              <option value="OFF_DUTY">Off Duty</option>
+              <option value="SUSPENDED">Suspended</option>
+            </select>
+          </div>
+        </div>
+        <div className="table-scroll">
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>Driver Name</th><th>License No</th><th>License Status</th>
+                <th>Duty Status</th><th>Safety Score</th><th>Contact</th>
+                {canWrite && <th>Actions</th>}
+              </tr>
+            </thead>
+            <tbody>
+              {pager.slice.map((d) => (
+                <tr key={d.id}>
+                  <td>
+                    <div className="cell-avatar">
+                      <div className="mini-avatar">{initials(d.name)}</div>
+                      <div>
+                        <strong>{d.name}</strong>
+                        <div className="muted small">{d.licenseCategory}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="mono">{d.licenseNo}</td>
+                  <td>
+                    {isExpired(d.licenseExpiry) ? (
+                      <span className="badge badge-expired">EXPIRED</span>
+                    ) : (
+                      <span className="badge badge-active">ACTIVE</span>
+                    )}
+                    <div className="muted small" style={{ marginTop: 4 }}>till {new Date(d.licenseExpiry).toLocaleDateString()}</div>
+                  </td>
+                  <td><span className={`badge badge-${d.status.toLowerCase()}`}>{d.status.replaceAll('_', ' ')}</span></td>
+                  <td>
+                    <div className="score-cell">
+                      <div className="score-bar">
+                        <div className={`score-fill score-${scoreTone(d.safetyScore)}`} style={{ width: `${d.safetyScore}%` }} />
+                      </div>
+                      <span className="mono">{d.safetyScore}</span>
+                    </div>
+                  </td>
+                  <td className="mono">{d.contact}</td>
+                  {canWrite && (
+                    <td className="row-actions">
+                      <button className="btn btn-ghost btn-sm" onClick={() => setForm({ ...d, licenseExpiry: d.licenseExpiry.slice(0, 10) })}>Edit</button>
