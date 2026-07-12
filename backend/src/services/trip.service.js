@@ -94,3 +94,6 @@ async function completeTrip(tripId, { endOdometerKm, fuelLiters, fuelCost, reven
     if (end < Number(trip.startOdometerKm)) {
       throw new ApiError(400, `Final odometer (${end}) cannot be less than the start reading (${trip.startOdometerKm})`);
     }
+
+    // Vehicle odometer moves forward with the trip; both statuses return to Available
+    await tx.vehicle.update({ where: { id: trip.vehicleId }, data: { status: 'AVAILABLE', odometerKm: end } });
