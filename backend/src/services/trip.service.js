@@ -29,3 +29,11 @@ async function assertAssignable(tx, { vehicleId, driverId, cargoWeightKg }) {
   if (driver.licenseExpiry < new Date()) {
     throw new ApiError(400, `${driver.name}'s license expired on ${driver.licenseExpiry.toISOString().slice(0, 10)}`);
   }
+
+  // Rule: cargo weight must not exceed the vehicle's max load capacity
+  if (Number(cargoWeightKg) > Number(vehicle.maxLoadKg)) {
+    throw new ApiError(400, `Cargo ${cargoWeightKg} kg exceeds ${vehicle.name}'s capacity of ${vehicle.maxLoadKg} kg`);
+  }
+
+  return { vehicle, driver };
+}
