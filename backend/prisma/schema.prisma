@@ -81,3 +81,20 @@ model Vehicle {
 
   @@map("vehicles")
 }
+
+model Driver {
+  id              Int          @id @default(autoincrement())
+  name            String
+  licenseNo       String       @unique @map("license_no")
+  licenseCategory String       @map("license_category") // LMV | HMV | MCWG ...
+  licenseExpiry   DateTime     @map("license_expiry")
+  contact         String
+  safetyScore     Int          @default(100) @map("safety_score")
+  status          DriverStatus @default(AVAILABLE)
+  createdAt       DateTime     @default(now()) @map("created_at")
+  updatedAt       DateTime     @updatedAt @map("updated_at")
+
+  trips Trip[]
+
+  @@map("drivers")
+}
