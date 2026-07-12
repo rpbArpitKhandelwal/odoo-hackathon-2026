@@ -61,3 +61,6 @@ export default function Login() {
         {isSignup && (
           <label>
             Full Name
+            <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Alex Kumar" required autoFocus />
+          </label>
+        )}
