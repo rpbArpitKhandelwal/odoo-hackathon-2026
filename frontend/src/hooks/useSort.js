@@ -27,3 +27,4 @@ export function useSort(data, defaultKey = null, defaultDirection = 'asc') {
   };
 
   return { items: sortedData, requestSort, sortConfig };
+}
