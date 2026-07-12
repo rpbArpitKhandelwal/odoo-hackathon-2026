@@ -85,3 +85,11 @@ Base: `/api` · Auth: `Authorization: Bearer <JWT>` · All non-auth routes requi
 | GET /reports/vehicles (+ `?format=csv`) | Per-vehicle cost/efficiency/ROI + CSV export | any role |
 
 Every error returns `{ "error": "human-readable message" }` with a proper status code (400 validation, 401 auth, 403 role, 404 missing, 409 conflict) — the frontend shows these directly, which nails the "graceful validation" judging criterion.
+
+## 5. RBAC Matrix
+
+| Module | Fleet Manager | Driver | Safety Officer | Financial Analyst |
+|---|---|---|---|---|
+| Dashboard | Fleet KPIs | Trip KPIs | Compliance KPIs | Financial KPIs |
+| Vehicles | **CRUD** | read | read | read |
+| Drivers | **CRUD** (full access) | read (+assign via trips) | **CRUD** | read |
