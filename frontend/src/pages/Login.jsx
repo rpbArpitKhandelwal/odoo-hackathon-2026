@@ -68,3 +68,6 @@ export default function Login() {
           Email
           <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@company.com" required autoFocus={!isSignup} />
         </label>
+        <label>
+          Password
+          <input
