@@ -17,3 +17,17 @@ const login = async (email) => {
 };
 const results = [];
 const check = (name, ok, detail = '') => results.push(`${ok ? 'PASS' : 'FAIL'}  ${name}${detail ? ' — ' + detail : ''}`);
+
+// ---------- 1. Auth validation ----------
+let r = await req('POST', '/auth/login', { email: 'manager@transitops.com', password: 'wrong' });
+check('Wrong password rejected (401)', r.status === 401);
+r = await req('POST', '/auth/login', { email: 'not-an-email', password: 'x' });
+check('Invalid email format rejected (400)', r.status === 400, r.data.error);
+r = await req('POST', '/auth/register', { name: 'X', email: 'bad-email', password: 'Password@123', role: 'DRIVER' });
+check('Signup: invalid email rejected (400)', r.status === 400, r.data.error);
+r = await req('POST', '/auth/register', { name: 'X', email: 'x@y.com', password: 'short', role: 'DRIVER' });
+check('Signup: short password rejected (400)', r.status === 400, r.data.error);
+r = await req('POST', '/auth/register', { name: 'X', email: 'manager@transitops.com', password: 'Password@123', role: 'DRIVER' });
+check('Signup: duplicate email rejected (409)', r.status === 409, r.data.error);
+r = await login('manager@transitops.com');
+check('Manager login works', r.status === 200 && !!r.data.token);
