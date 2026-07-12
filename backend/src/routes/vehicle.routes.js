@@ -68,3 +68,17 @@ router.post('/', authorize('FLEET_MANAGER'), async (req, res, next) => {
     next(err); // duplicate regNo -> P2002 -> 409 via errorHandler
   }
 });
+
+router.put('/:id', authorize('FLEET_MANAGER'), async (req, res, next) => {
+  try {
+    validateVehicle(req.body);
+    const { regNo, name, type, maxLoadKg, odometerKm, acquisitionCost, region, status } = req.body;
+    const vehicle = await prisma.vehicle.update({
+      where: { id: Number(req.params.id) },
+      data: { regNo: regNo.trim().toUpperCase(), name: name.trim(), type: type.trim(), maxLoadKg, odometerKm, acquisitionCost, region, status },
+    });
+    res.json(vehicle);
+  } catch (err) {
+    next(err);
+  }
+});
