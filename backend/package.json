@@ -11,3 +11,10 @@
     "db:studio": "prisma studio",
     "test:e2e": "node tests/e2e.mjs"
   },
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.3",
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
