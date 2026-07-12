@@ -33,3 +33,16 @@ npm run dev                          # app on http://localhost:5173
 | Driver | driver@transitops.com |
 | Safety Officer | safety@transitops.com |
 | Financial Analyst | analyst@transitops.com |
+
+## Where things live
+
+```
+backend/
+  prisma/schema.prisma        ← the ERD in code (show this to judges)
+  prisma/seed.js              ← demo data incl. edge cases (expired license, suspended driver)
+  src/middleware/auth.js      ← JWT + RBAC (authorize('FLEET_MANAGER', ...))
+  src/services/trip.service.js← ALL mandatory business rules, in DB transactions ★
+  src/routes/*.routes.js      ← one file per module
+frontend/
+  src/pages/Vehicles.jsx      ← finished CRUD page: copy this pattern
+  src/pages/{Drivers,Trips,Maintenance,Expenses,Reports}.jsx ← TODO stubs with
