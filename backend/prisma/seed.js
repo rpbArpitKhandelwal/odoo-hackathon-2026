@@ -56,3 +56,21 @@ async function main() {
   for (const d of drivers) {
     driverRows[d.licenseNo] = await prisma.driver.upsert({ where: { licenseNo: d.licenseNo }, update: {}, create: d });
   }
+
+  // --- One completed trip with fuel + expense so reports have data on first load ---
+  const manager = await prisma.user.findUnique({ where: { email: 'manager@transitops.com' } });
+  const existingTrip = await prisma.trip.findFirst();
+  if (!existingTrip) {
+    const trip = await prisma.trip.create({
+      data: {
+        source: 'Ahmedabad', destination: 'Mumbai',
+        cargoWeightKg: 600, plannedDistanceKm: 530,
+        status: 'COMPLETED',
+        startOdometerKm: 44680, endOdometerKm: 45210, revenue: 18000,
+        dispatchedAt: new Date(Date.now() - 3 * 24 * 3600 * 1000),
+        completedAt: new Date(Date.now() - 2 * 24 * 3600 * 1000),
+        vehicleId: vehicleRows['GJ01AB1234'].id,
+        driverId: driverRows['DL-2020-001'].id,
+        createdById: manager.id,
+      },
+    });
