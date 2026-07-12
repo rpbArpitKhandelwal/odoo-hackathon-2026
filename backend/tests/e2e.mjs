@@ -118,3 +118,16 @@ r = await req('POST', `/maintenance/${maintId}/close`, { cost: 1200 });
 check('Maintenance closed, vehicle AVAILABLE again', r.status === 200);
 avail = (await req('GET', '/vehicles?available=true')).data;
 check('  → vehicle back in dispatch pool', avail.some((v) => v.id === van.id));
+
+// ---------- 7. Reports & dashboard (any role) ----------
+r = await req('GET', '/reports/vehicles');
+check('Reports return data with ROI/efficiency', r.status === 200 && r.data.length > 0 && 'roi' in r.data[0]);
+r = await req('GET', '/dashboard');
+check('Dashboard KPIs work', r.status === 200 && 'fleetUtilization' in r.data);
+const csv = await fetch(BASE + '/reports/vehicles?format=csv', { headers: { Authorization: `Bearer ${token}` } });
+check('CSV export works', csv.status === 200 && (csv.headers.get('content-type') || '').includes('csv'));
+
+console.log(results.join('\n'));
+const fails = results.filter((x) => x.startsWith('FAIL')).length;
+console.log(`\n${results.length - fails}/${results.length} passed`);
+process.exit(fails ? 1 : 0);
