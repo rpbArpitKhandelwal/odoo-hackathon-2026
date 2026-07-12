@@ -42,3 +42,35 @@ router.post('/', authorize('FLEET_MANAGER'), async (req, res, next) => {
     next(err);
   }
 });
+
+// POST /api/maintenance/:id/close — vehicle returns to AVAILABLE unless retired,
+// or unless it still has ANOTHER open maintenance log.
+router.post('/:id/close', authorize('FLEET_MANAGER'), async (req, res, next) => {
+  try {
+    const id = Number(req.params.id);
+    const result = await prisma.$transaction(async (tx) => {
+      const log = await tx.maintenanceLog.findUnique({ where: { id }, include: { vehicle: true } });
+      if (!log) throw new ApiError(404, 'Maintenance log not found');
+      if (log.status === 'CLOSED') throw new ApiError(400, 'This maintenance log is already closed');
+
+      const closed = await tx.maintenanceLog.update({
+        where: { id },
+        data: { status: 'CLOSED', closedAt: new Date(), cost: req.body.cost ?? log.cost },
+        include: { vehicle: true },
+      });
+
+      const stillOpen = await tx.maintenanceLog.count({
+        where: { vehicleId: log.vehicleId, status: 'OPEN' },
+      });
+      if (stillOpen === 0 && log.vehicle.status !== 'RETIRED') {
+        await tx.vehicle.update({ where: { id: log.vehicleId }, data: { status: 'AVAILABLE' } });
+      }
+      return closed;
+    });
+    res.json(result);
+  } catch (err) {
+    next(err);
+  }
+});
+
+module.exports = router;
