@@ -52,3 +52,9 @@ Money/weight columns are `DECIMAL`, never `FLOAT` (mention this to judges — it
 **Vehicle:** `AVAILABLE ⇄ ON_TRIP` (dispatch/complete), `AVAILABLE ⇄ IN_SHOP` (maintenance open/close), `→ RETIRED` (terminal).
 
 **Driver:** `AVAILABLE ⇄ ON_TRIP`, plus manual `OFF_DUTY` / `SUSPENDED`.
+
+### Mandatory business rules → where enforced
+
+| Rule | Enforcement |
+|---|---|
+| Registration number unique | DB `UNIQUE` constraint + API 409 error |
