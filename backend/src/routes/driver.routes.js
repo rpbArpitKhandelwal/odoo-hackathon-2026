@@ -87,3 +87,17 @@ router.put('/:id', authorize(...CAN_WRITE), async (req, res, next) => {
     next(err);
   }
 });
+
+router.delete('/:id', authorize(...CAN_WRITE), async (req, res, next) => {
+  try {
+    const id = Number(req.params.id);
+    const tripCount = await prisma.trip.count({ where: { driverId: id } });
+    if (tripCount > 0) throw new ApiError(409, 'Driver has trip history — set status to Suspended or Off Duty instead of deleting');
+    await prisma.driver.delete({ where: { id } });
+    res.json({ deleted: true });
+  } catch (err) {
+    next(err);
+  }
+});
+
+module.exports = router;
