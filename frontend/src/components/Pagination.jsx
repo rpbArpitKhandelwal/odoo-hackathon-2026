@@ -19,4 +19,15 @@ export function Pager({ pager }) {
   for (let i = 1; i <= pages; i++) {
     if (pages > 7 && i > 3 && i < pages - 2 && Math.abs(i - page) > 1) {
       if (nums[nums.length - 1] !== '…') nums.push('…');
-    } else nums.push(i);
+    } else nums.push(i);
+  }
+  return (
+    <div className="pager">
+      <span className="pager-info">Showing {from} to {to} of {total} entries</span>
+      <div className="pager-btns">
+        <button className="page-btn" disabled={page === 1} onClick={() => setPage(page - 1)}>‹</button>
+        {nums.map((n, i) =>
+          n === '…' ? (
+            <span key={`e${i}`} className="pager-ellipsis">…</span>
+          ) : (
+            <button key={n} className={`page-btn ${n === page ? 'active' : ''}`} onClick={() => setPage(n)}>{n}</button>
