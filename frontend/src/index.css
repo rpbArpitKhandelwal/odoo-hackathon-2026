@@ -216,3 +216,16 @@ h2 { font-size: 19px; font-weight: 700; }
   padding: 9.5px 16px; border-radius: 9px; border: none;
   font-family: var(--font-mono); font-size: 13px; font-weight: 600;
   cursor: pointer; white-space: nowrap;
+}
+.btn-primary, .btn-dark { background: var(--dark-btn); color: #fff; }
+.btn-primary:hover, .btn-dark:hover { filter: brightness(1.35); }
+.btn-primary:disabled { opacity: 0.55; cursor: default; }
+.btn-blue { background: var(--accent); color: #fff; }
+.btn-blue:hover { filter: brightness(1.1); }
+.btn-ghost { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+.btn-ghost:hover { background: var(--gray-soft); }
+.btn-ghost.danger { color: var(--red); }
+.btn-ghost.danger:hover { background: var(--red-soft); border-color: var(--red-soft); }
+.btn-sm { padding: 6.5px 12px; font-size: 12px; }
+
+/* ================= KPI cards ================= */
