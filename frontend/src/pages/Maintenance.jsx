@@ -101,4 +101,56 @@ export default function Maintenance() {
       </div>
 
       <div className="panel">
-        <div className="tabs">
+        <div className="tabs">
+          <button className={`tab ${tab === 'OPEN' ? 'active' : ''}`} onClick={() => setTab('OPEN')}>
+            Active Requests ({logs.filter((m) => m.status === 'OPEN').length})
+          </button>
+          <button className={`tab ${tab === 'CLOSED' ? 'active' : ''}`} onClick={() => setTab('CLOSED')}>
+            Service History ({logs.filter((m) => m.status === 'CLOSED').length})
+          </button>
+        </div>
+        <div className="table-scroll">
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>Vehicle</th><th>Service Type</th><th>Cost</th>
+                <th>Opened</th><th>Closed</th><th>Status</th>
+                {canWrite && <th>Actions</th>}
+              </tr>
+            </thead>
+            <tbody>
+              {pager.slice.map((m) => (
+                <tr key={m.id}>
+                  <td>
+                    <div className="cell-avatar">
+                      <div className="mini-avatar"><IconTruck size={15} /></div>
+                      <div>
+                        <strong>{m.vehicle.regNo}</strong>
+                        <div className="muted small">{m.vehicle.name}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <strong>{m.title}</strong>
+                    {m.description && <div className="muted small">{m.description}</div>}
+                  </td>
+                  <td className="mono">₹{Number(m.cost).toLocaleString()}</td>
+                  <td className="muted">{new Date(m.openedAt).toLocaleDateString()}</td>
+                  <td className="muted">{m.closedAt ? new Date(m.closedAt).toLocaleDateString() : '—'}</td>
+                  <td><span className={`badge badge-${m.status.toLowerCase()}`}>{m.status === 'OPEN' ? 'In Progress' : 'Completed'}</span></td>
+                  {canWrite && (
+                    <td className="row-actions">
+                      {m.status === 'OPEN' && (
+                        <button className="btn btn-blue btn-sm" onClick={() => setClosing(m)}>Close</button>
+                      )}
+                    </td>
+                  )}
+                </tr>
+              ))}
+              {filtered.length === 0 && (
+                <tr><td colSpan="7" className="muted center">No {tab === 'OPEN' ? 'active requests' : 'service history'} yet.</td></tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+        <Pager pager={pager} />
