@@ -87,3 +87,11 @@ async function main() {
       data: { vehicleId: vehicleRows['GJ01AB1234'].id, title: 'Oil change', cost: 2200, status: 'CLOSED', closedAt: new Date() },
     });
   }
+
+  console.log('Seed complete. Logins (password: Password@123):');
+  users.forEach((u) => console.log(`  ${u.role.padEnd(18)} ${u.email}`));
+}
+
+main()
+  .catch((e) => { console.error(e); process.exit(1); })
+  .finally(() => prisma.$disconnect());
