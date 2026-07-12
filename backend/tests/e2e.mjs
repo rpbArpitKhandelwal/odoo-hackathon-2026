@@ -74,3 +74,35 @@ check('RBAC: Analyst CAN create expenses', r.status === 201);
 await login('safety@transitops.com');
 r = await req('POST', '/trips', { source: 'A', destination: 'B', vehicleId: van.id, driverId: alex.id, cargoWeightKg: 10, plannedDistanceKm: 10 });
 check('RBAC: Safety Officer blocked from creating trips (403)', r.status === 403);
+
+// ---------- 5. Trip business rules (as Driver — the only role allowed) ----------
+await login('driver@transitops.com');
+r = await req('POST', '/trips', { source: 'A', destination: 'B', vehicleId: van.id, driverId: alex.id, cargoWeightKg: 9999, plannedDistanceKm: 10 });
+check('Overweight cargo rejected', r.status === 400, r.data.error);
+r = await req('POST', '/trips', { source: 'A', destination: 'B', vehicleId: van.id, driverId: expired.id, cargoWeightKg: 100, plannedDistanceKm: 10 });
+check('Expired-license driver rejected', r.status === 400, r.data.error);
+r = await req('POST', '/trips', { source: 'A', destination: 'B', vehicleId: van.id, driverId: suspended.id, cargoWeightKg: 100, plannedDistanceKm: 10 });
+check('Suspended driver rejected', r.status === 400, r.data.error);
+r = await req('POST', '/trips', { source: 'A', destination: 'B', vehicleId: retired.id, driverId: alex.id, cargoWeightKg: 100, plannedDistanceKm: 10 });
+check('Retired vehicle rejected', r.status === 400, r.data.error);
+
+r = await req('POST', '/trips', { source: 'Surat', destination: 'Pune', vehicleId: van.id, driverId: alex.id, cargoWeightKg: 500, plannedDistanceKm: 420 });
+check('Valid trip created as DRAFT', r.status === 201 && r.data.status === 'DRAFT');
+const tripId = r.data.id;
+
+r = await req('POST', `/trips/${tripId}/dispatch`);
+check('Dispatch works', r.status === 200 && r.data.status === 'DISPATCHED');
+check('  → vehicle flips to ON_TRIP', r.data.vehicle.status === 'ON_TRIP');
+check('  → driver flips to ON_TRIP', r.data.driver.status === 'ON_TRIP');
+const startOdo = Number(r.data.startOdometerKm);
+
+r = await req('POST', '/trips', { source: 'X', destination: 'Y', vehicleId: van.id, driverId: alex.id, cargoWeightKg: 100, plannedDistanceKm: 10 });
+check('Double-assignment of on-trip vehicle/driver rejected (409)', r.status === 409, r.data.error);
+
+r = await req('POST', `/trips/${tripId}/complete`, { endOdometerKm: startOdo - 100 });
+check('Odometer going backwards rejected', r.status === 400, r.data.error);
+
+r = await req('POST', `/trips/${tripId}/complete`, { endOdometerKm: startOdo + 420, fuelLiters: 38, fuelCost: 3600, revenue: 15000 });
+check('Complete works', r.status === 200 && r.data.status === 'COMPLETED');
+check('  → vehicle back to AVAILABLE, odometer updated', r.data.vehicle.status === 'AVAILABLE' && Number(r.data.vehicle.odometerKm) === startOdo + 420);
+check('  → driver back to AVAILABLE', r.data.driver.status === 'AVAILABLE');
