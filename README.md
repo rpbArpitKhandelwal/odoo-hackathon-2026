@@ -24,3 +24,12 @@ By utilizing strict database constraints and atomic state machine transitions, T
 - **Live KPI Dashboard**: Instant visibility into Fleet Utilization, Fuel Efficiency, Operational Costs, and Vehicle ROI, automatically tailored for the active user's role.
 
 ---
+
+## 🛠 Tech Stack
+
+- **Frontend**: React (Vite) with a modern, responsive UI.
+- **Backend**: Node.js & Express.js REST API.
+- **Database**: PostgreSQL with Prisma ORM for type-safe queries and robust schema migrations.
+- **Authentication**: Stateless JWT authentication with Bcrypt password hashing.
+
+---
