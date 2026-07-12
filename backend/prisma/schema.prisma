@@ -98,3 +98,19 @@ model Driver {
 
   @@map("drivers")
 }
+
+model Trip {
+  id                Int        @id @default(autoincrement())
+  source            String
+  destination       String
+  cargoWeightKg     Decimal    @map("cargo_weight_kg") @db.Decimal(10, 2)
+  plannedDistanceKm Decimal    @map("planned_distance_km") @db.Decimal(10, 1)
+  status            TripStatus @default(DRAFT)
+  // odometer snapshot at dispatch / completion -> actual distance = end - start
+  startOdometerKm   Decimal?   @map("start_odometer_km") @db.Decimal(12, 1)
+  endOdometerKm     Decimal?   @map("end_odometer_km") @db.Decimal(12, 1)
+  revenue           Decimal    @default(0) @db.Decimal(12, 2)
+  dispatchedAt      DateTime?  @map("dispatched_at")
+  completedAt       DateTime?  @map("completed_at")
+  cancelledAt       DateTime?  @map("cancelled_at")
+  createdAt         DateTime   @default(now()) @map("created_at")
