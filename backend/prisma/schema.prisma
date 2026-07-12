@@ -60,3 +60,24 @@ enum MaintenanceStatus {
   OPEN
   CLOSED
 }
+
+model Vehicle {
+  id              Int           @id @default(autoincrement())
+  regNo           String        @unique @map("reg_no")
+  name            String // e.g. "Van-05"
+  type            String // Truck | Van | Mini Truck | Bike
+  maxLoadKg       Decimal       @map("max_load_kg") @db.Decimal(10, 2)
+  odometerKm      Decimal       @default(0) @map("odometer_km") @db.Decimal(12, 1)
+  acquisitionCost Decimal       @map("acquisition_cost") @db.Decimal(12, 2)
+  region          String?
+  status          VehicleStatus @default(AVAILABLE)
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+
+  trips           Trip[]
+  maintenanceLogs MaintenanceLog[]
+  fuelLogs        FuelLog[]
+  expenses        Expense[]
+
+  @@map("vehicles")
+}
