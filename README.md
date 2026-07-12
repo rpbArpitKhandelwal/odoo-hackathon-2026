@@ -33,3 +33,13 @@ By utilizing strict database constraints and atomic state machine transitions, T
 - **Authentication**: Stateless JWT authentication with Bcrypt password hashing.
 
 ---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js v18+
+- PostgreSQL v18 (Local database)
+
+### 1. Database Setup
+Create a new PostgreSQL database named `transitops`.
+```powershell
