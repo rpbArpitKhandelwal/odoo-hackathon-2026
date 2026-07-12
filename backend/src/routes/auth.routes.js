@@ -33,3 +33,9 @@ router.post('/register', async (req, res, next) => {
     next(err);
   }
 });
+
+// POST /api/auth/login  { email, password }
+router.post('/login', async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    if (!EMAIL_RE.test(email || '')) throw new ApiError(400, 'Entered email is invalid');
