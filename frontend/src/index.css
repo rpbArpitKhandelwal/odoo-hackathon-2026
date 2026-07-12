@@ -52,3 +52,17 @@
 }
 
 * { box-sizing: border-box; margin: 0; }
+
+/* Theme the root surfaces too, so no stray area ever shows the wrong color
+   (scrollbars, overscroll, and any gap around the app follow the theme). */
+html { background: var(--bg); color-scheme: light; }
+[data-theme='dark'] { color-scheme: dark; }
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14.5px;
+}
+
+h1 { font-size: 26px; font-weight: 800; letter-spacing: -0.4px; }
