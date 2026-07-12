@@ -46,3 +46,14 @@ backend/
 frontend/
   src/pages/Vehicles.jsx      ← finished CRUD page: copy this pattern
   src/pages/{Drivers,Trips,Maintenance,Expenses,Reports}.jsx ← TODO stubs with
+                                exact instructions + API endpoints in the top comment
+```
+
+## Team TODO board (see SYSTEM_DESIGN.md §7 for the hour-by-hour split)
+
+- [ ] Drivers page (pattern: Vehicles.jsx)
+- [ ] Trips page — dispatch/complete/cancel buttons + error alerts (most demo-critical)
+- [ ] Maintenance page
+- [ ] Fuel & Expenses page
+- [ ] Reports page + CSV download button
+- [ ] Bonus: charts, dark mode, search/sort everywhere
