@@ -1,124 +1,68 @@
-# odoo-hackathon-2026
-# 🚚 TransitOps : Smart Transport Operations Platform
+# TransitOps — Smart Transport Operations Platform
 
-> Enterprise Transport Operations Platform built for the **Odoo Hiring Hackathon 2026**.
+Odoo Hackathon project. **React + Express + PostgreSQL (Prisma).**
+Read [SYSTEM_DESIGN.md](SYSTEM_DESIGN.md) first — it has the ERD, API spec, business-rule mapping, 8-hour plan, and demo script.
 
-## Overview
+## One-time setup (each member, ~5 minutes)
 
-TransitOps is a centralized fleet management platform that digitizes transport operations by providing:
+Prereqs: Node 18+, PostgreSQL (installed at `C:\Program Files\PostgreSQL\18` on this machine).
 
-- Fleet Management
-- Driver Management
-- Trip Dispatch
-- Maintenance Management
-- Fuel & Expense Tracking
-- Reports & Analytics
-- Role-Based Access Control (RBAC)
+```powershell
+# 1. Create the database (enter your postgres password when prompted)
+& "C:\Program Files\PostgreSQL\18\bin\psql.exe" -U postgres -c "CREATE DATABASE transitops;"
 
----
+# 2. Backend
+cd backend
+copy .env.example .env        # then EDIT .env: put your real postgres password in DATABASE_URL
+npm install
+npx prisma migrate dev --name init   # creates all tables
+npm run db:seed                      # demo users, vehicles, drivers, one completed trip
+npm run dev                          # API on http://localhost:5000
 
-## Technology Stack
-
-### Frontend
-
-- React
-- Vite
-- TypeScript
-- Tailwind CSS
-
-### Backend
-
-- Spring Boot
-- Spring Security
-- JWT Authentication
-- Spring Data JPA
-
-### Database
-
-- PostgreSQL
-
----
-
-## System Architecture
-
-```text
-React Frontend
-       │
-       ▼
-Spring Boot REST API
-       │
-       ▼
-Business Layer
-       │
-       ▼
-Repository Layer
-       │
-       ▼
-PostgreSQL
+# 3. Frontend (second terminal)
+cd frontend
+npm install
+npm run dev                          # app on http://localhost:5173
 ```
 
----
+## Demo logins (password: `Password@123`)
 
-## Project Modules
+| Role | Email |
+|---|---|
+| Fleet Manager | manager@transitops.com |
+| Driver | driver@transitops.com |
+| Safety Officer | safety@transitops.com |
+| Financial Analyst | analyst@transitops.com |
 
-- Authentication
-- Dashboard
-- Vehicle Registry
-- Driver Management
-- Trip Management
-- Maintenance
-- Fuel & Expense Management
-- Reports & Analytics
+## Where things live
 
----
-
-## Team Workflow
-
-- Feature Branches
-- Pull Requests
-- Code Reviews
-- Modular Architecture
-
----
-
-## Project Status
-
-- [x] Requirement Analysis
-- [x] System Design
-- [ ] Database Design
-- [ ] Authentication & RBAC
-- [ ] Vehicle Management
-- [ ] Driver Management
-- [ ] Trip Management
-- [ ] Maintenance Management
-- [ ] Fuel & Expense Management
-- [ ] Dashboard & Analytics
-
----
-
-## Repository Structure
-
-```text
-TransitOps/
-│
-├── backend/
-├── frontend/
-├── docs/
-│
-├── README.md
-├── LICENSE
-├── .gitignore
-└── docker-compose.yml
+```
+backend/
+  prisma/schema.prisma        ← the ERD in code (show this to judges)
+  prisma/seed.js              ← demo data incl. edge cases (expired license, suspended driver)
+  src/middleware/auth.js      ← JWT + RBAC (authorize('FLEET_MANAGER', ...))
+  src/services/trip.service.js← ALL mandatory business rules, in DB transactions ★
+  src/routes/*.routes.js      ← one file per module
+frontend/
+  src/pages/Vehicles.jsx      ← finished CRUD page: copy this pattern
+  src/pages/{Drivers,Trips,Maintenance,Expenses,Reports}.jsx ← TODO stubs with
+                                exact instructions + API endpoints in the top comment
 ```
 
----
+## Team TODO board (see SYSTEM_DESIGN.md §7 for the hour-by-hour split)
 
-## Documentation
+- [ ] Drivers page (pattern: Vehicles.jsx)
+- [ ] Trips page — dispatch/complete/cancel buttons + error alerts (most demo-critical)
+- [ ] Maintenance page
+- [ ] Fuel & Expenses page
+- [ ] Reports page + CSV download button
+- [ ] Bonus: charts, dark mode, search/sort everywhere
 
-Detailed project documentation is available in the `docs/` directory:
+## Git workflow (judged!)
 
-- Architecture
-- Database Design
-- API Design
-- Business Rules
-- Development Roadmap
+Everyone commits. Branch per feature (`feat/trips-ui`), small commits, merge via PR.
+
+```powershell
+git checkout -b feat/<your-feature>
+git add . ; git commit -m "feat: drivers CRUD page with license-expiry highlight"
+```
