@@ -57,3 +57,12 @@ frontend/
 - [ ] Fuel & Expenses page
 - [ ] Reports page + CSV download button
 - [ ] Bonus: charts, dark mode, search/sort everywhere
+
+## Git workflow (judged!)
+
+Everyone commits. Branch per feature (`feat/trips-ui`), small commits, merge via PR.
+
+```powershell
+git checkout -b feat/<your-feature>
+git add . ; git commit -m "feat: drivers CRUD page with license-expiry highlight"
+```
