@@ -180,4 +180,64 @@ export default function Trips() {
             <p className="muted small">Only dispatch-legal vehicles and assignable drivers appear below — business rules are enforced again at dispatch.</p>
             <div className="form-grid">
               <label>Source<input value={form.source} onChange={set('source')} placeholder="Ahmedabad" required /></label>
-              <label>Destination<input value={form.destination} onChange={set('destination')} placeholder="Mumbai" required /></label>
+              <label>Destination<input value={form.destination} onChange={set('destination')} placeholder="Mumbai" required /></label>
+              <label>Vehicle (available only)
+                <select value={form.vehicleId} onChange={set('vehicleId')} required>
+                  <option value="">Select a vehicle…</option>
+                  {vehicles.map((v) => (
+                    <option key={v.id} value={v.id}>
+                      {v.name} ({v.regNo}) — max {Number(v.maxLoadKg).toLocaleString()} kg
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label>Driver (assignable only)
+                <select value={form.driverId} onChange={set('driverId')} required>
+                  <option value="">Select a driver…</option>
+                  {drivers.map((d) => (
+                    <option key={d.id} value={d.id}>{d.name} — {d.licenseCategory}, score {d.safetyScore}</option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                Cargo Weight (kg){selectedVehicle && <span className="muted small"> — capacity {Number(selectedVehicle.maxLoadKg).toLocaleString()} kg</span>}
+                <input type="number" min="1" value={form.cargoWeightKg} onChange={set('cargoWeightKg')} required />
+              </label>
+              <label>Planned Distance (km)<input type="number" min="1" value={form.plannedDistanceKm} onChange={set('plannedDistanceKm')} required /></label>
+            </div>
+            {vehicles.length === 0 && <p className="alert alert-error" style={{ marginTop: 14 }}>No vehicles are currently available for dispatch.</p>}
+            {drivers.length === 0 && <p className="alert alert-error" style={{ marginTop: 14 }}>No drivers are currently assignable (available + valid license).</p>}
+            <div className="modal-actions">
+              <button type="button" className="btn btn-ghost" onClick={() => setForm(null)}>Cancel</button>
+              <button className="btn btn-dark">Create Draft</button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {completing && (
+        <div className="modal-backdrop" onClick={() => setCompleting(null)}>
+          <form className="modal" onClick={(e) => e.stopPropagation()} onSubmit={completeSubmit}>
+            <h2>Complete Trip #{completing.id}</h2>
+            <p className="muted small">
+              {completing.source} → {completing.destination} · {completing.vehicle.name} · start odometer{' '}
+              {Number(completing.startOdometerKm).toLocaleString()} km
+            </p>
+            <div className="form-grid">
+              <label>Final Odometer (km)
+                <input name="endOdometerKm" type="number" min={Number(completing.startOdometerKm)} step="0.1" required autoFocus />
+              </label>
+              <label>Fuel Consumed (liters)<input name="fuelLiters" type="number" min="0" step="0.01" /></label>
+              <label>Fuel Cost<input name="fuelCost" type="number" min="0" step="0.01" /></label>
+              <label>Trip Revenue<input name="revenue" type="number" min="0" step="0.01" /></label>
+            </div>
+            <div className="modal-actions">
+              <button type="button" className="btn btn-ghost" onClick={() => setCompleting(null)}>Cancel</button>
+              <button className="btn btn-dark">Complete Trip</button>
+            </div>
+          </form>
+        </div>
+      )}
+    </div>
+  );
+}
