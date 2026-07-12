@@ -29,3 +29,11 @@ router.post('/', authorize(...CAN_MANAGE), async (req, res, next) => {
     next(err);
   }
 });
+
+router.post('/:id/dispatch', authorize(...CAN_MANAGE), async (req, res, next) => {
+  try {
+    res.json(await tripService.dispatchTrip(Number(req.params.id)));
+  } catch (err) {
+    next(err);
+  }
+});
