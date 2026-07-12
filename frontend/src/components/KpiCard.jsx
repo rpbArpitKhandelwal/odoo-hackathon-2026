@@ -7,4 +7,9 @@ export default function KpiCard({ icon, tone = 'blue', label, value, sub, trend,
         <div className={`kpi-ico tone-${tone}`}>{icon}</div>
         {trend && (
           <span className={`chip ${trend.good === false ? 'chip-red' : trend.good ? 'chip-green' : 'chip-gray'}`}>
-            {trend.dir === 'up' ? '↗' : trend.dir === 'down' ? '↘' : '—'} {trend.text}
+            {trend.dir === 'up' ? '↗' : trend.dir === 'down' ? '↘' : '—'} {trend.text}
+          </span>
+        )}
+      </div>
+      <div className="kpi-label">{label}</div>
+      <div className="kpi-value">{value}</div>
