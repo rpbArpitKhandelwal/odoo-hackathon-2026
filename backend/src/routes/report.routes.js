@@ -52,3 +52,19 @@ async function buildVehicleReport() {
 
 const round1 = (n) => Math.round(n * 10) / 10;
 const round2 = (n) => Math.round(n * 100) / 100;
+
+// GET /api/reports/vehicles            -> JSON
+// GET /api/reports/vehicles?format=csv -> CSV download (mandatory deliverable)
+router.get('/vehicles', async (req, res, next) => {
+  try {
+    const report = await buildVehicleReport();
+    if (req.query.format === 'csv') {
+      const headers = Object.keys(report[0] || { info: 'no data' });
+      const rows = report.map((r) => headers.map((h) => JSON.stringify(r[h] ?? '')).join(','));
+      const csv = [headers.join(','), ...rows].join('\n');
+      res.setHeader('Content-Type', 'text/csv');
+      res.setHeader('Content-Disposition', 'attachment; filename="transitops-vehicle-report.csv"');
+      return res.send(csv);
+    }
+    res.json(report);
+  } catch (err) {
