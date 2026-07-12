@@ -58,3 +58,6 @@ export default function Login() {
 
         {error && <div className="alert alert-error">{error}</div>}
 
+        {isSignup && (
+          <label>
+            Full Name
