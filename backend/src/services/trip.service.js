@@ -126,3 +126,13 @@ async function cancelTrip(tripId) {
       await tx.vehicle.update({ where: { id: trip.vehicleId }, data: { status: 'AVAILABLE' } });
       await tx.driver.update({ where: { id: trip.driverId }, data: { status: 'AVAILABLE' } });
     }
+
+    return tx.trip.update({
+      where: { id: tripId },
+      data: { status: 'CANCELLED', cancelledAt: new Date() },
+      include: { vehicle: true, driver: true },
+    });
+  });
+}
+
+module.exports = { createTrip, dispatchTrip, completeTrip, cancelTrip };
