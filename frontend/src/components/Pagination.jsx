@@ -30,4 +30,11 @@ export function Pager({ pager }) {
           n === '…' ? (
             <span key={`e${i}`} className="pager-ellipsis">…</span>
           ) : (
-            <button key={n} className={`page-btn ${n === page ? 'active' : ''}`} onClick={() => setPage(n)}>{n}</button>
+            <button key={n} className={`page-btn ${n === page ? 'active' : ''}`} onClick={() => setPage(n)}>{n}</button>
+          )
+        )}
+        <button className="page-btn" disabled={page === pages} onClick={() => setPage(page + 1)}>›</button>
+      </div>
+    </div>
+  );
+}
