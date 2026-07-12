@@ -97,3 +97,4 @@ async function completeTrip(tripId, { endOdometerKm, fuelLiters, fuelCost, reven
 
     // Vehicle odometer moves forward with the trip; both statuses return to Available
     await tx.vehicle.update({ where: { id: trip.vehicleId }, data: { status: 'AVAILABLE', odometerKm: end } });
+    await tx.driver.update({ where: { id: trip.driverId }, data: { status: 'AVAILABLE' } });
