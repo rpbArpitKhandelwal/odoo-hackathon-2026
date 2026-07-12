@@ -153,4 +153,53 @@ export default function Maintenance() {
             </tbody>
           </table>
         </div>
-        <Pager pager={pager} />
+        <Pager pager={pager} />
+      </div>
+
+      {form && (
+        <div className="modal-backdrop" onClick={() => setForm(null)}>
+          <form className="modal" onClick={(e) => e.stopPropagation()} onSubmit={save}>
+            <h2>Log New Maintenance</h2>
+            <p className="muted small">Opening a log automatically moves the vehicle to <strong>In Shop</strong> and removes it from trip dispatch.</p>
+            <div className="form-grid">
+              <label>Vehicle
+                <select value={form.vehicleId} onChange={set('vehicleId')} required>
+                  <option value="">Select a vehicle…</option>
+                  {vehicles.map((v) => (
+                    <option key={v.id} value={v.id}>{v.name} ({v.regNo})</option>
+                  ))}
+                </select>
+              </label>
+              <label>Service Type<input value={form.title} onChange={set('title')} placeholder="Oil Change" required /></label>
+              <label>Estimated Cost<input type="number" min="0" step="0.01" value={form.cost} onChange={set('cost')} /></label>
+              <label>Description<input value={form.description} onChange={set('description')} placeholder="Optional details" /></label>
+            </div>
+            {vehicles.length === 0 && <p className="alert alert-error" style={{ marginTop: 14 }}>No vehicles are eligible (must not be On Trip, In Shop, or Retired).</p>}
+            <div className="modal-actions">
+              <button type="button" className="btn btn-ghost" onClick={() => setForm(null)}>Cancel</button>
+              <button className="btn btn-dark">Open &amp; Move to In Shop</button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {closing && (
+        <div className="modal-backdrop" onClick={() => setClosing(null)}>
+          <form className="modal" onClick={(e) => e.stopPropagation()} onSubmit={close}>
+            <h2>Close Maintenance</h2>
+            <p className="muted small">
+              {closing.title} on {closing.vehicle.name} — the vehicle returns to <strong>Available</strong> (unless retired).
+            </p>
+            <label>Final Cost
+              <input name="cost" type="number" min="0" step="0.01" defaultValue={Number(closing.cost)} autoFocus />
+            </label>
+            <div className="modal-actions">
+              <button type="button" className="btn btn-ghost" onClick={() => setClosing(null)}>Cancel</button>
+              <button className="btn btn-dark">Close Log</button>
+            </div>
+          </form>
+        </div>
+      )}
+    </div>
+  );
+}
