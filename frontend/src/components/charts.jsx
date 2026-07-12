@@ -78,4 +78,28 @@ export function Donut({ data, centerLabel, centerValue, size = 210 }) {
           <div key={d.label} className="legend-item">
             <span className="legend-dot" style={{ background: d.color }} />
             <span>{d.label} <b>({total ? Math.round((d.value / total) * 100) : 0}%)</b></span>
-          </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// Horizontal bar list: data = [{ label, value }]
+export function BarList({ data, prefix = '₹' }) {
+  const max = Math.max(...data.map((d) => d.value), 1);
+  return (
+    <div className="barlist">
+      {data.map((d) => (
+        <div key={d.label} className="barlist-row">
+          <div className="barlist-label">{d.label}</div>
+          <div className="barlist-track">
+            <div className="barlist-bar" style={{ width: `${Math.max((d.value / max) * 100, 2)}%` }} />
+          </div>
+          <div className="barlist-value">{prefix}{d.value.toLocaleString()}</div>
+        </div>
+      ))}
+      {data.length === 0 && <p className="muted">No data yet.</p>}
+    </div>
+  );
+}
