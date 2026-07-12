@@ -109,4 +109,60 @@ export default function Dashboard() {
                 trend={{ dir: dutyPct >= 50 ? 'up' : 'down', text: `${dutyPct}% duty`, good: dutyPct >= 50 }}
                 sub="Available + currently on trip"
               />
-            ),
+            ),
+            shop: (
+              <KpiCard key="shop"
+                icon={<IconWrench />} tone={kpis.inMaintenance > 0 ? 'red' : 'green'} label="Vehicles In Shop" value={kpis.inMaintenance}
+                trend={{ dir: kpis.inMaintenance > 0 ? 'up' : 'flat', text: `${openMaint.length} open job${openMaint.length === 1 ? '' : 's'}`, good: kpis.inMaintenance === 0 }}
+                sub={`${kpis.availableVehicles} vehicles ready for dispatch`}
+              />
+            ),
+            revenue: (
+              <KpiCard key="revenue"
+                dark icon={<IconWallet />} tone="blue" label="Revenue MTD" value={fmtMoney(revenueMtd)}
+                trend={{ dir: 'up', text: `${kpis.fleetUtilization}% util`, good: true }}
+                sub={`Fleet utilization ${kpis.fleetUtilization}% of active fleet`}
+              />
+            ),
+          };
+          const ORDER = {
+            FLEET_MANAGER: ['shop', 'trips', 'drivers', 'revenue'],
+            DRIVER: ['trips', 'drivers', 'shop', 'revenue'],
+            SAFETY_OFFICER: ['drivers', 'trips', 'shop', 'revenue'],
+            FINANCIAL_ANALYST: ['revenue', 'trips', 'shop', 'drivers'],
+          };
+          return (ORDER[user.role] || ORDER.DRIVER).map((k) => CARDS[k]);
+        })()}
+      </div>
+
+      <div className="chart-grid">
+        <div className="panel">
+          <div className="panel-head">
+            <div>
+              <h2>Fleet Status Distribution</h2>
+              <div className="muted small">Live vehicle counts by lifecycle status</div>
+            </div>
+            <span className="chip chip-blue">{kpis.totalVehicles} total</span>
+          </div>
+          <div className="panel-body">
+            <div className="barlist">
+              {statusRows.map((r) => (
+                <div key={r.label} className="barlist-row">
+                  <div className="barlist-label">{r.label}</div>
+                  <div className="barlist-track">
+                    <div className={`barlist-bar`} style={{ width: `${Math.max((r.value / maxStatus) * 100, 2)}%` }} />
+                  </div>
+                  <div className="barlist-value">{r.value}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="panel">
+          <div className="panel-head">
+            <h2>Critical Alerts</h2>
+            {alerts.length > 0 && <span className="chip chip-red">{alerts.length} active</span>}
+          </div>
+          <div className="panel-body" style={{ maxHeight: 320, overflowY: 'auto' }}>
+            {alerts.length === 0 && <p className="muted">All clear — no compliance or maintenance alerts. ✓</p>}
