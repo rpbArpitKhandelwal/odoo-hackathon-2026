@@ -51,4 +51,58 @@ export default function Expenses() {
     } catch (err) {
       toast.error(err.message);
     }
-  }
+  }
+
+  const set = (key) => (e) => setForm({ ...form, [key]: e.target.value });
+  const totalFuel = fuelLogs.reduce((s, f) => s + Number(f.cost), 0);
+  const totalLiters = fuelLogs.reduce((s, f) => s + Number(f.liters), 0);
+  const totalExpenses = expenses.reduce((s, x) => s + Number(x.amount), 0);
+
+  return (
+    <div>
+      <div className="page-head">
+        <div>
+          <h1>Fuel &amp; Expenses</h1>
+          <p className="page-sub">Record fuel fills, tolls, and other operating costs per vehicle.</p>
+        </div>
+        {canWrite && (
+          <div className="filters">
+            <button className="btn btn-ghost" onClick={() => setForm({ kind: 'expense', ...EXP_EMPTY, vehicleId: vehicleFilter })}>
+              <IconPlus size={15} /> Add Expense
+            </button>
+            <button className="btn btn-dark" onClick={() => setForm({ kind: 'fuel', ...FUEL_EMPTY, vehicleId: vehicleFilter })}>
+              <IconPlus size={15} /> Add Fuel Log
+            </button>
+          </div>
+        )}
+      </div>
+
+      <div className="kpi-grid">
+        <KpiCard
+          icon={<IconFuel />} tone="amber" label="Fuel Cost" value={`₹${totalFuel.toLocaleString()}`}
+          sub={`${totalLiters.toLocaleString()} liters ${vehicleFilter ? '(this vehicle)' : '(all vehicles)'}`}
+        />
+        <KpiCard icon={<IconWallet />} tone="blue" label="Other Expenses" value={`₹${totalExpenses.toLocaleString()}`} sub="Tolls, parking, fines, misc" />
+        <KpiCard icon={<IconTrend />} tone="purple" label="Total Spend Shown" value={`₹${(totalFuel + totalExpenses).toLocaleString()}`} sub="See Reports for operational cost (fuel + maintenance)" />
+      </div>
+
+      <div className="panel">
+        <div className="panel-head" style={{ paddingBottom: 0, borderBottom: 'none' }}>
+          <div className="filters">
+            <select value={vehicleFilter} onChange={(e) => setVehicleFilter(e.target.value)}>
+              <option value="">All vehicles</option>
+              {vehicles.map((v) => (
+                <option key={v.id} value={v.id}>{v.name} ({v.regNo})</option>
+              ))}
+            </select>
+          </div>
+        </div>
+        <div className="tabs">
+          <button className={`tab ${tab === 'fuel' ? 'active' : ''}`} onClick={() => setTab('fuel')}>
+            Fuel Logs ({fuelLogs.length})
+          </button>
+          <button className={`tab ${tab === 'expenses' ? 'active' : ''}`} onClick={() => setTab('expenses')}>
+            Other Expenses ({expenses.length})
+          </button>
+        </div>
+
