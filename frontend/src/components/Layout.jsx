@@ -188,3 +188,19 @@ export default function Layout() {
                 </button>
                 <button className="dropdown-item" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
                   {theme === 'light' ? <IconMoon size={16} /> : <IconSun size={16} />} Switch to {theme === 'light' ? 'dark' : 'light'} mode
+                </button>
+                <button className="dropdown-item danger" onClick={logout}>
+                  <IconLogout size={16} /> Log out
+                </button>
+              </div>
+            )}
+          </div>
+        </header>
+
+        <main className="content">
+          <Outlet />
+        </main>
+      </div>
+    </div>
+  );
+}
