@@ -77,3 +77,6 @@ async function main() {
     await prisma.fuelLog.create({
       data: { vehicleId: trip.vehicleId, tripId: trip.id, liters: 48.5, cost: 4560, filledAt: trip.completedAt },
     });
+    await prisma.expense.create({
+      data: { vehicleId: trip.vehicleId, tripId: trip.id, category: 'TOLL', amount: 890, note: 'NH48 tolls', spentAt: trip.completedAt },
+    });
