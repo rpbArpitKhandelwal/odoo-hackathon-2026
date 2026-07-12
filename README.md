@@ -79,3 +79,11 @@ Use the following credentials to explore the platform across different roles. Th
 | **Driver** | `driver@transitops.com` | Trips & Dispatching |
 | **Safety Officer** | `safety@transitops.com` | Driver Management & Compliance |
 | **Financial Analyst**| `analyst@transitops.com` | Costs, Fuel, and ROI Reports |
+
+---
+
+## 📚 System Design & Architecture
+
+For a deep dive into the underlying architecture, database Entity-Relationship Diagram (ERD), API specifications, and business rules, please refer to the [System Design Document](./SYSTEM_DESIGN.md).
+
+> Built with ❤️ for the Odoo Hackathon.
