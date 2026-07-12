@@ -56,3 +56,6 @@ export const IconFuel = (p) => (
 export const IconCalendar = (p) => (
   <I {...p}><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M3 10h18M8 3v4M16 3v4" /></I>
 );
+export const IconTrend = (p) => (
+  <I {...p}><path d="m3 16 6-6 4 4 8-8" /><path d="M15 6h6v6" /></I>
+);
