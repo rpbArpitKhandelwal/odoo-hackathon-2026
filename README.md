@@ -52,3 +52,12 @@ cd backend
 # Duplicate the environment template
 copy .env.example .env
 # Important: Edit .env and put your real postgres password in DATABASE_URL
+
+# Install dependencies and setup the database
+npm install
+npx prisma migrate dev --name init   # Applies schema
+npm run db:seed                      # Seeds demo data
+npm run dev                          # Starts API on http://localhost:5000
+```
+
+### 3. Frontend Initialization (in a new terminal)
