@@ -55,3 +55,6 @@ export default function Login() {
         <p className="muted">
           {isSignup ? 'Create your account to join the operations command center.' : 'Sign in to your operations command center.'}
         </p>
+
+        {error && <div className="alert alert-error">{error}</div>}
+
