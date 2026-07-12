@@ -11,3 +11,11 @@ function signToken(user) {
     expiresIn: '12h',
   });
 }
+
+// POST /api/auth/register  { name, email, password, role }
+router.post('/register', async (req, res, next) => {
+  try {
+    const { name, email, password, role } = req.body;
+    if (!name || !name.trim()) throw new ApiError(400, 'Name is required');
+    if (!EMAIL_RE.test(email || '')) throw new ApiError(400, 'Entered email is invalid');
+    if (!password || password.length < 8) throw new ApiError(400, 'Password must be at least 8 characters');
