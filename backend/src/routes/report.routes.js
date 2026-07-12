@@ -18,3 +18,33 @@ async function buildVehicleReport() {
   });
 
   return vehicles.map((v) => {
+    const distanceKm = v.trips.reduce(
+      (sum, t) => sum + (Number(t.endOdometerKm || 0) - Number(t.startOdometerKm || 0)),
+      0
+    );
+    const fuelLiters = v.fuelLogs.reduce((s, f) => s + Number(f.liters), 0);
+    const fuelCost = v.fuelLogs.reduce((s, f) => s + Number(f.cost), 0);
+    const maintenanceCost = v.maintenanceLogs.reduce((s, m) => s + Number(m.cost), 0);
+    const otherExpenses = v.expenses.reduce((s, e) => s + Number(e.amount), 0);
+    const revenue = v.trips.reduce((s, t) => s + Number(t.revenue), 0);
+    const operationalCost = fuelCost + maintenanceCost;
+    const acquisition = Number(v.acquisitionCost);
+
+    return {
+      vehicleId: v.id,
+      regNo: v.regNo,
+      name: v.name,
+      type: v.type,
+      status: v.status,
+      completedTrips: v.trips.length,
+      distanceKm: round1(distanceKm),
+      fuelLiters: round1(fuelLiters),
+      fuelEfficiencyKmPerL: fuelLiters > 0 ? round1(distanceKm / fuelLiters) : null,
+      fuelCost: round2(fuelCost),
+      maintenanceCost: round2(maintenanceCost),
+      otherExpenses: round2(otherExpenses),
+      operationalCost: round2(operationalCost),
+      revenue: round2(revenue),
+      roi: acquisition > 0 ? round2((revenue - operationalCost) / acquisition) : null,
+    };
+  });
