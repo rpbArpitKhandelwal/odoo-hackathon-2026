@@ -112,3 +112,12 @@ async function completeTrip(tripId, { endOdometerKm, fuelLiters, fuelCost, reven
     });
   });
 }
+
+// DRAFT|DISPATCHED -> CANCELLED: a dispatched cancellation restores both to Available
+async function cancelTrip(tripId) {
+  return prisma.$transaction(async (tx) => {
+    const trip = await tx.trip.findUnique({ where: { id: tripId } });
+    if (!trip) throw new ApiError(404, 'Trip not found');
+    if (!['DRAFT', 'DISPATCHED'].includes(trip.status)) {
+      throw new ApiError(400, `A ${trip.status.toLowerCase()} trip cannot be cancelled`);
+    }
