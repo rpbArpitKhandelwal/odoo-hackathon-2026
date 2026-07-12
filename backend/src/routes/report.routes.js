@@ -68,3 +68,8 @@ router.get('/vehicles', async (req, res, next) => {
     }
     res.json(report);
   } catch (err) {
+    next(err);
+  }
+});
+
+module.exports = router;
