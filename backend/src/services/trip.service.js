@@ -121,3 +121,8 @@ async function cancelTrip(tripId) {
     if (!['DRAFT', 'DISPATCHED'].includes(trip.status)) {
       throw new ApiError(400, `A ${trip.status.toLowerCase()} trip cannot be cancelled`);
     }
+
+    if (trip.status === 'DISPATCHED') {
+      await tx.vehicle.update({ where: { id: trip.vehicleId }, data: { status: 'AVAILABLE' } });
+      await tx.driver.update({ where: { id: trip.driverId }, data: { status: 'AVAILABLE' } });
+    }
