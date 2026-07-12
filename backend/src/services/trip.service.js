@@ -73,3 +73,11 @@ async function dispatchTrip(tripId) {
     const { vehicle } = await assertAssignable(tx, trip);
 
     await tx.vehicle.update({ where: { id: trip.vehicleId }, data: { status: 'ON_TRIP' } });
+    await tx.driver.update({ where: { id: trip.driverId }, data: { status: 'ON_TRIP' } });
+    return tx.trip.update({
+      where: { id: tripId },
+      data: { status: 'DISPATCHED', dispatchedAt: new Date(), startOdometerKm: vehicle.odometerKm },
+      include: { vehicle: true, driver: true },
+    });
+  });
+}
