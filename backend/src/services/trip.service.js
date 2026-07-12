@@ -70,3 +70,6 @@ async function dispatchTrip(tripId) {
     if (trip.status !== 'DRAFT') throw new ApiError(400, `Only Draft trips can be dispatched (current: ${trip.status})`);
 
     // Re-check every rule at the moment of dispatch — state may have changed since the draft
+    const { vehicle } = await assertAssignable(tx, trip);
+
+    await tx.vehicle.update({ where: { id: trip.vehicleId }, data: { status: 'ON_TRIP' } });
