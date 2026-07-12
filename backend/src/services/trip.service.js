@@ -25,3 +25,7 @@ async function assertAssignable(tx, { vehicleId, driverId, cargoWeightKg }) {
   if (driver.status === 'OFF_DUTY') throw new ApiError(400, `${driver.name} is off duty`);
   // Rule: a driver already On Trip cannot take another trip
   if (driver.status === 'ON_TRIP') throw new ApiError(409, `${driver.name} is already on a trip`);
+  // Rule: expired license blocks assignment
+  if (driver.licenseExpiry < new Date()) {
+    throw new ApiError(400, `${driver.name}'s license expired on ${driver.licenseExpiry.toISOString().slice(0, 10)}`);
+  }
