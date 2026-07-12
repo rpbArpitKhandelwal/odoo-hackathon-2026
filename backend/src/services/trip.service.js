@@ -104,3 +104,11 @@ async function completeTrip(tripId, { endOdometerKm, fuelLiters, fuelCost, reven
         data: { vehicleId: trip.vehicleId, tripId: trip.id, liters: fuelLiters, cost: fuelCost || 0 },
       });
     }
+
+    return tx.trip.update({
+      where: { id: tripId },
+      data: { status: 'COMPLETED', completedAt: new Date(), endOdometerKm: end, revenue: revenue || 0 },
+      include: { vehicle: true, driver: true },
+    });
+  });
+}
