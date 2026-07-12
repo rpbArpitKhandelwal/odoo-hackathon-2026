@@ -88,3 +88,33 @@ CREATE TABLE "trips" (
 -- CreateTable
 CREATE TABLE "maintenance_logs" (
     "id" SERIAL NOT NULL,
+    "title" TEXT NOT NULL,
+    "description" TEXT,
+    "cost" DECIMAL(12,2) NOT NULL DEFAULT 0,
+    "status" "MaintenanceStatus" NOT NULL DEFAULT 'OPEN',
+    "opened_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "closed_at" TIMESTAMP(3),
+    "vehicle_id" INTEGER NOT NULL,
+
+    CONSTRAINT "maintenance_logs_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "fuel_logs" (
+    "id" SERIAL NOT NULL,
+    "liters" DECIMAL(10,2) NOT NULL,
+    "cost" DECIMAL(12,2) NOT NULL,
+    "filled_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "vehicle_id" INTEGER NOT NULL,
+    "trip_id" INTEGER,
+
+    CONSTRAINT "fuel_logs_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "expenses" (
+    "id" SERIAL NOT NULL,
+    "category" TEXT NOT NULL,
+    "amount" DECIMAL(12,2) NOT NULL,
+    "note" TEXT,
+    "spent_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
