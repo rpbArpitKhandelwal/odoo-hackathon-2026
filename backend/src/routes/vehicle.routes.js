@@ -11,3 +11,26 @@ function validateVehicle(body) {
   if (!(Number(maxLoadKg) > 0)) throw new ApiError(400, 'Max load capacity must be a positive number');
   if (!(Number(acquisitionCost) >= 0)) throw new ApiError(400, 'Acquisition cost must be a number');
 }
+
+// GET /api/vehicles?status=&type=&region=&available=true&search=
+// available=true -> ONLY vehicles legal to dispatch (business rule: never Retired / In Shop / On Trip)
+router.get('/', async (req, res, next) => {
+  try {
+    const { status, type, region, available, search } = req.query;
+    const where = {};
+    if (available === 'true') where.status = 'AVAILABLE';
+    else if (status) where.status = status;
+    if (type) where.type = type;
+    if (region) where.region = region;
+    if (search) {
+      where.OR = [
+        { name: { contains: search, mode: 'insensitive' } },
+        { regNo: { contains: search, mode: 'insensitive' } },
+      ];
+    }
+    const vehicles = await prisma.vehicle.findMany({ where, orderBy: { createdAt: 'desc' } });
+    res.json(vehicles);
+  } catch (err) {
+    next(err);
+  }
+});
