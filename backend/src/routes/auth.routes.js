@@ -19,3 +19,6 @@ router.post('/register', async (req, res, next) => {
     if (!name || !name.trim()) throw new ApiError(400, 'Name is required');
     if (!EMAIL_RE.test(email || '')) throw new ApiError(400, 'Entered email is invalid');
     if (!password || password.length < 8) throw new ApiError(400, 'Password must be at least 8 characters');
+
+    const roleRow = await prisma.role.findUnique({ where: { name: role || 'DRIVER' } });
+    if (!roleRow) throw new ApiError(400, `Unknown role: ${role}`);
