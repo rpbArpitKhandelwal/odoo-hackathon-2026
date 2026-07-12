@@ -77,3 +77,9 @@ export default function Layout() {
     document.addEventListener('mousedown', onClick);
     return () => document.removeEventListener('mousedown', onClick);
   }, []);
+
+  function submitSearch(e) {
+    if (e.key === 'Enter' && search.trim()) {
+      navigate(`/vehicles?q=${encodeURIComponent(search.trim())}`);
+      setSearch('');
+    }
