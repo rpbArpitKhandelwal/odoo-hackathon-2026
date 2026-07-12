@@ -51,4 +51,31 @@ export function Donut({ data, centerLabel, centerValue, size = 210 }) {
   const C = 2 * Math.PI * R;
   let offset = 0;
   return (
-    <div className="donut-wrap">
+    <div className="donut-wrap">
+      <svg viewBox="0 0 220 220" width={size} height={size} role="img">
+        <g transform="rotate(-90 110 110)">
+          {total === 0 && <circle cx="110" cy="110" r={R} fill="none" stroke="var(--border)" strokeWidth={STROKE} />}
+          {data.map((d) => {
+            const frac = total ? d.value / total : 0;
+            const el = (
+              <circle
+                key={d.label}
+                cx="110" cy="110" r={R} fill="none"
+                stroke={d.color} strokeWidth={STROKE}
+                strokeDasharray={`${frac * C} ${C}`}
+                strokeDashoffset={-offset * C}
+              />
+            );
+            offset += frac;
+            return el;
+          })}
+        </g>
+        <text x="110" y="103" textAnchor="middle" className="donut-center-label">{centerLabel}</text>
+        <text x="110" y="128" textAnchor="middle" className="donut-center-value">{centerValue}</text>
+      </svg>
+      <div className="donut-legend">
+        {data.map((d) => (
+          <div key={d.label} className="legend-item">
+            <span className="legend-dot" style={{ background: d.color }} />
+            <span>{d.label} <b>({total ? Math.round((d.value / total) * 100) : 0}%)</b></span>
+          </div>
