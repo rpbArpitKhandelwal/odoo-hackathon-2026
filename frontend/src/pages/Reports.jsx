@@ -43,4 +43,50 @@ export default function Reports() {
   const avgEff = totLiters > 0 ? (totDistance / totLiters).toFixed(1) : '—';
   const costPerKm = totDistance > 0 ? ((totFuelCost + totMaint) / totDistance).toFixed(2) : '—';
 
-  // Revenue by month (last 6 months) from completed trips
+  // Revenue by month (last 6 months) from completed trips
+  const now = new Date();
+  const revenueSeries = Array.from({ length: 6 }, (_, i) => {
+    const d = new Date(now.getFullYear(), now.getMonth() - (5 - i), 1);
+    const value = trips
+      .filter((t) => t.completedAt && new Date(t.completedAt).getMonth() === d.getMonth() && new Date(t.completedAt).getFullYear() === d.getFullYear())
+      .reduce((s, t) => s + Number(t.revenue), 0);
+    return { label: MONTHS[d.getMonth()], value };
+  });
+
+  const donutData = [
+    { label: 'Fuel', value: totFuelCost, color: '#2563eb' },
+    { label: 'Maintenance', value: totMaint, color: '#f59e0b' },
+    { label: 'Tolls & Other', value: totOther, color: '#10b981' },
+  ];
+  const totalCost = totFuelCost + totMaint + totOther;
+  const fmtCr = (n) => (n >= 10000000 ? `₹${(n / 10000000).toFixed(1)} Cr` : n >= 100000 ? `₹${(n / 100000).toFixed(1)} L` : `₹${Math.round(n).toLocaleString()}`);
+
+  return (
+    <div>
+      <div className="page-head">
+        <div>
+          <h1>Reports &amp; Analytics</h1>
+          <p className="page-sub">Fleet performance and financial overview.</p>
+        </div>
+        <button className="btn btn-dark" onClick={downloadCsv}>
+          <IconDownload size={15} /> Export CSV
+        </button>
+      </div>
+
+      <div className="kpi-grid">
+        <KpiCard
+          icon={<IconFuel />} tone="blue" label="Avg Fuel Efficiency"
+          value={<>{avgEff}<small> km/L</small></>}
+          trend={{ dir: 'up', text: `${totLiters.toLocaleString()} L`, good: true }}
+          sub={`${totDistance.toLocaleString()} km on completed trips`}
+        />
+        <KpiCard
+          icon={<IconTrend />} tone="amber" label="Operating Cost per km"
+          value={<>₹{costPerKm}</>}
+          trend={{ dir: 'down', text: 'fuel + maint.', good: true }}
+          sub={`₹${(totFuelCost + totMaint).toLocaleString()} total operational cost`}
+        />
+        <KpiCard
+          icon={<IconWallet />} tone="green" label="Total Revenue"
+          value={fmtCr(totRevenue)}
+          trend={{ dir: 'up', text: `${trips.length} trips`, good: true }}
