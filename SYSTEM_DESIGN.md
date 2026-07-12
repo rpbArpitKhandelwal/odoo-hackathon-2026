@@ -131,3 +131,15 @@ Enforced twice: `authorize(...roles)` middleware on the API (403 with a clear me
 5. Complete trip with final odometer + fuel → both back to Available, fuel log recorded.
 6. Open maintenance "Oil Change" on Van-05 → status In Shop, gone from dispatch dropdown. Close it → Available again.
 7. Try dispatching with driver whose license is expired (seeded: "Ravi Expired") → blocked with a clear message.
+8. As Financial Analyst → reports: operational cost, fuel efficiency, ROI; download the CSV.
+9. Show the Prisma schema / ERD and one transaction block in the code — this is your database-design flex.
+
+## 9. Things judges explicitly said they score — checklist
+
+- [x] Local PostgreSQL, real backend API, no BaaS
+- [x] Normalized schema, constraints at DB level, DECIMAL for money
+- [ ] All 4 members committing regularly (do this from hour 0)
+- [x] Graceful validation with human messages (409 duplicate reg no, 400 overweight cargo…)
+- [ ] Clean consistent UI: one color scheme, sidebar nav, status badges
+- [ ] Everyone presents one module they built and can explain
+- [ ] Understand every library used: be ready to explain *why Prisma* (type-safe queries, migrations as schema history) and *why JWT* (stateless auth)
