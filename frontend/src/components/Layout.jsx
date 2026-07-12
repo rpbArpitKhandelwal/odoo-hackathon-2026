@@ -40,3 +40,10 @@ export default function Layout() {
   const topRightRef = useRef(null);
 
   useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    localStorage.setItem('transitops_theme', theme);
+  }, [theme]);
+
+  // Live notifications from real data — refreshed on route change
+  useEffect(() => {
+    let alive = true;
