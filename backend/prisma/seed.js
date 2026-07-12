@@ -74,3 +74,6 @@ async function main() {
         createdById: manager.id,
       },
     });
+    await prisma.fuelLog.create({
+      data: { vehicleId: trip.vehicleId, tripId: trip.id, liters: 48.5, cost: 4560, filledAt: trip.completedAt },
+    });
