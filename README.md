@@ -15,3 +15,12 @@
 **TransitOps** is a comprehensive, full-stack fleet management solution built for the Odoo Hackathon. It is designed to handle complex transportation workflows, including dispatching, vehicle maintenance tracking, driver management, and financial analytics. 
 
 By utilizing strict database constraints and atomic state machine transitions, TransitOps ensures high data integrity and a seamless operational experience.
+
+## ✨ Key Features
+
+- **Strict State Machine Architecture**: Complex workflows (like vehicle dispatches and maintenance) are handled atomically inside database transactions. A vehicle cannot be dispatched if it is currently `IN_SHOP` or already `ON_TRIP`.
+- **Role-Based Access Control (RBAC)**: Distinct personas (`FLEET_MANAGER`, `DRIVER`, `SAFETY_OFFICER`, `FINANCIAL_ANALYST`) ensure users only see and interact with data relevant to their role.
+- **Graceful Error Handling**: Validation rules (e.g., overweight cargo, expired licenses, duplicate registration numbers) return clear, human-readable UI alerts.
+- **Live KPI Dashboard**: Instant visibility into Fleet Utilization, Fuel Efficiency, Operational Costs, and Vehicle ROI, automatically tailored for the active user's role.
+
+---
