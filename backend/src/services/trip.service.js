@@ -88,3 +88,9 @@ async function completeTrip(tripId, { endOdometerKm, fuelLiters, fuelCost, reven
     const trip = await tx.trip.findUnique({ where: { id: tripId } });
     if (!trip) throw new ApiError(404, 'Trip not found');
     if (trip.status !== 'DISPATCHED') throw new ApiError(400, `Only Dispatched trips can be completed (current: ${trip.status})`);
+
+    const end = Number(endOdometerKm);
+    if (!(end > 0)) throw new ApiError(400, 'Final odometer reading is required');
+    if (end < Number(trip.startOdometerKm)) {
+      throw new ApiError(400, `Final odometer (${end}) cannot be less than the start reading (${trip.startOdometerKm})`);
+    }
