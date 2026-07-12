@@ -141,4 +141,51 @@ export default function Vehicles() {
               ))}
               {vehicles.length === 0 && (
                 <tr><td colSpan="8" className="muted center">No vehicles match the current filters.</td></tr>
-              )}
+              )}
+            </tbody>
+          </table>
+        </div>
+        <Pager pager={pager} />
+      </div>
+
+      {form && (
+        <div className="modal-backdrop" onClick={() => setForm(null)}>
+          <form className="modal" onClick={(e) => e.stopPropagation()} onSubmit={save}>
+            <h2>{form.id ? 'Edit Vehicle' : 'Register Vehicle'}</h2>
+            <p className="muted small">Registration numbers are unique — duplicates are rejected by the database.</p>
+            <div className="form-grid">
+              <label>Registration No<input value={form.regNo} onChange={set('regNo')} placeholder="GJ01AB1234" required /></label>
+              <label>Name / Model<input value={form.name} onChange={set('name')} placeholder="Van-05" required /></label>
+              <label>Type
+                <select value={form.type} onChange={set('type')}>
+                  <option>Truck</option><option>Mini Truck</option><option>Van</option><option>Bike</option>
+                </select>
+              </label>
+              <label>Max Load (kg)<input type="number" min="1" value={form.maxLoadKg} onChange={set('maxLoadKg')} required /></label>
+              <label>Odometer (km)<input type="number" min="0" value={form.odometerKm} onChange={set('odometerKm')} /></label>
+              <label>Acquisition Cost<input type="number" min="0" value={form.acquisitionCost} onChange={set('acquisitionCost')} required /></label>
+              <label>Region
+                <select value={form.region || ''} onChange={set('region')}>
+                  <option>North</option><option>South</option><option>East</option><option>West</option><option>Central</option>
+                </select>
+              </label>
+              {form.id && (
+                <label>Status
+                  <select value={form.status} onChange={set('status')}>
+                    <option value="AVAILABLE">Available</option>
+                    <option value="IN_SHOP">In Shop</option>
+                    <option value="RETIRED">Retired</option>
+                  </select>
+                </label>
+              )}
+            </div>
+            <div className="modal-actions">
+              <button type="button" className="btn btn-ghost" onClick={() => setForm(null)}>Cancel</button>
+              <button className="btn btn-dark">{form.id ? 'Save Changes' : 'Register Vehicle'}</button>
+            </div>
+          </form>
+        </div>
+      )}
+    </div>
+  );
+}
