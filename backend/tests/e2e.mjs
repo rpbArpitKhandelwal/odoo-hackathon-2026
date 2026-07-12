@@ -31,3 +31,12 @@ r = await req('POST', '/auth/register', { name: 'X', email: 'manager@transitops.
 check('Signup: duplicate email rejected (409)', r.status === 409, r.data.error);
 r = await login('manager@transitops.com');
 check('Manager login works', r.status === 200 && !!r.data.token);
+
+// ---------- 2. Seeded lookups ----------
+const vehicles = (await req('GET', '/vehicles')).data;
+const drivers = (await req('GET', '/drivers')).data;
+const van = vehicles.find((v) => v.regNo === 'GJ01AB1234');
+const alex = drivers.find((d) => d.name === 'Alex Kumar');
+const expired = drivers.find((d) => d.name === 'Ravi Expired');
+const suspended = drivers.find((d) => d.name === 'Sunil Suspended');
+const retired = vehicles.find((v) => v.status === 'RETIRED');
